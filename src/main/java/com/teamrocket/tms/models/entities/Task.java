@@ -29,11 +29,12 @@ public class Task {
     @Column(name = "priority")
     private Priority priority;
 
-    @Column(name = "assignee")
-    private String assignee;
-
     @Column(name = "is_complete")
     private boolean isComplete;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Transient
     private Map<String, String> comments = new HashMap<>();

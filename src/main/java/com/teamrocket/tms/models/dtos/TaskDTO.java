@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.dtos;
 
+import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.utils.enums.Priority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,9 +27,9 @@ public class TaskDTO {
 
     private Priority priority;
 
-    private String assignee;
-
     private boolean isComplete;
 
     private Map<String, String> comments = new HashMap<>();
+
+    private User user;
 }
