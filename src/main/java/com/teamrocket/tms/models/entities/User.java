@@ -26,4 +26,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Task> tasksForUser = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "team_id")
+    private Team team;
 }

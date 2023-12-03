@@ -1,5 +1,7 @@
 package com.teamrocket.tms.exceptions;
 
+import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
+import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,16 @@ public class GlobalExceptionHandler {
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Object> handleTaskNotFoundException(TaskNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TaskAlreadyExistsException.class)
+    public ResponseEntity<Object> handleTaskAlreadyExistsException(TaskAlreadyExistsException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(TeamNotFoundException.class)
