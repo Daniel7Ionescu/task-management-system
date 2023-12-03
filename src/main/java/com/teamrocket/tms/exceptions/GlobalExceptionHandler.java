@@ -21,4 +21,10 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
+
+    private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("message: ", e.getMessage());
+        return new ResponseEntity<>(result, httpStatus);
+    }
 }
