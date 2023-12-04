@@ -1,6 +1,7 @@
 package com.teamrocket.tms.models.dtos;
 
 import com.teamrocket.tms.models.entities.Task;
+import com.teamrocket.tms.models.entities.Team;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
