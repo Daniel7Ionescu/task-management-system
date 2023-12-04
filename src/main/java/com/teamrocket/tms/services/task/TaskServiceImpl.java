@@ -31,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
 
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
         Task savedTaskEntity = taskRepository.save(taskEntity);
-        log.info("Task {} : {} inserted in db.", taskEntity.getId(), taskEntity.getTitle());
+        log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
 
         return modelMapper.map(savedTaskEntity, TaskDTO.class);
     }
