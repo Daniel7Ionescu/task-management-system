@@ -1,7 +1,7 @@
 package com.teamrocket.tms.controllers;
 
 import com.teamrocket.tms.models.dtos.UserDTO;
-import com.teamrocket.tms.services.UserService;
+import com.teamrocket.tms.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
