@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.entities;
 
+import com.teamrocket.tms.utils.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +23,7 @@ public class User {
     private String lastName;
 
     @Column(name = "role")
-    private String role;
+    private RoleEnum role;
 
     @Column(name = "email")
     private String email;
