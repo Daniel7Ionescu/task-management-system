@@ -4,7 +4,9 @@ import com.teamrocket.tms.exceptions.project.ProjectAlreadyExistsException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.repositories.ProjectRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProjectServiceValidationImpl implements ProjectServiceValidation {
 
     private final ProjectRepository projectRepository;
