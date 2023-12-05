@@ -38,10 +38,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> getAllTasks() {
-        List<Task> taskList = taskRepository.findAll();
         List<TaskDTO> taskDTOList = new ArrayList<>();
-        taskList.stream()
-                .forEach(element -> taskDTOList.add(modelMapper.map(element, TaskDTO.class)));
+
+        taskRepository.findAll().forEach(element -> taskDTOList.add(modelMapper.map(element, TaskDTO.class)));
         log.info("Task list retrieved.");
 
         return taskDTOList;

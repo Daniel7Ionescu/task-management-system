@@ -20,5 +20,6 @@ public class TeamDTO {
     private String teamLeader;
 
     private Project project;
+
     private List<User> userList;
 }
