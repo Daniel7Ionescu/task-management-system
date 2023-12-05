@@ -2,6 +2,7 @@ package com.teamrocket.tms.models.dtos;
 
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.utils.enums.Priority;
+import com.teamrocket.tms.utils.enums.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -23,13 +24,25 @@ public class TaskDTO {
     @Size(min = 3, max = 100, message = "must be between 3 and 100 characters")
     private String description;
 
-    private LocalDate dueDate;
+    private String createdBy;
+
+    private Status status;
 
     private Priority priority;
 
+    private double progress;
+
     private boolean isComplete;
+
+    private LocalDate dueDate;
+
+    private String completedBy;
+
+    private String reviewedBy;
+
+    private User user;
 
     private Map<String, String> comments = new HashMap<>();
 
-    private User user;
+    private Map<String, Boolean> objectives = new HashMap<>();
 }

@@ -2,6 +2,7 @@ package com.teamrocket.tms.models.dtos;
 
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.Team;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class UserDTO {
     private String role;
 
     @NotBlank
-    @Size(min = 3, max = 30, message = "must be between 3 and 30 characters")
+    @Email
     private String email;
 
     private List<Task> tasksForUser = new ArrayList<>();

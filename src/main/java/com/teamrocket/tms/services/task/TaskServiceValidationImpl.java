@@ -18,8 +18,9 @@ public class TaskServiceValidationImpl implements TaskServiceValidation {
     @Override
     public void validateTaskAlreadyExists(TaskDTO taskDTO) {
         Task foundTask = taskRepository.findByTitle(taskDTO.getTitle());
-        if (foundTask != null && foundTask.getId() == taskDTO.getId()) {
-            throw new TaskAlreadyExistsException("A task with title " + taskDTO.getTitle() + " and Id " + taskDTO.getId() + " already exists.");
+
+        if (foundTask != null) {
+            throw new TaskAlreadyExistsException("A task with title " + taskDTO.getTitle() + " already exists.");
         }
     }
 }

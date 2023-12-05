@@ -9,9 +9,9 @@ public enum Priority {
     MEDIUM("Medium"),
     LOW("Low");
 
-    private final String label;
+    private final String priorityLabel;
 
-    Priority(String label) {
-        this.label = label;
+    Priority(String priorityLabel) {
+        this.priorityLabel = priorityLabel;
     }
 }
