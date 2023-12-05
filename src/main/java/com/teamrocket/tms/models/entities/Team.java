@@ -15,11 +15,15 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 30, nullable = false)
+    @Column(name = "name", length = 30, nullable = false, unique = true)
     private String name;
 
-    @Column(name = "project_name", length = 30)
-    private String projectName;
+    @Column(name = "team_leader", length = 30)
+    private String teamLeader;
+
+    //TO DO : decide who is the owner, Project or Team
+    @Transient
+    private Project project;
 
     @OneToMany(mappedBy = "team")
     private List<User> userList = new ArrayList<>();
