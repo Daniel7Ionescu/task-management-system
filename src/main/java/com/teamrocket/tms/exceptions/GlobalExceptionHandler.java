@@ -4,6 +4,8 @@ import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
+import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
+import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +45,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TeamAlreadyExistsException.class)
     public ResponseEntity<Object> handleTeamAlreadyExistsException(TeamAlreadyExistsException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
