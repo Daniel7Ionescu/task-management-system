@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.dtos;
 
+import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.entities.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

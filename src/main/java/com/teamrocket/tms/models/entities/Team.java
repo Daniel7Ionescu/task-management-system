@@ -21,7 +21,6 @@ public class Team {
     @Column(name = "team_leader", length = 30)
     private String teamLeader;
 
-    //TO DO : decide who is the owner, Project or Team
     @Transient
     private Project project;
 
