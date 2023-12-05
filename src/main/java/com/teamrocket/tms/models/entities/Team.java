@@ -21,8 +21,8 @@ public class Team {
     @Column(name = "team_leader", length = 30)
     private String teamLeader;
 
-    @OneToOne(mappedBy = "project")
-    @JoinColumn(name = "project_id")
+    //TO DO : decide who is the owner, Project or Team
+    @Transient
     private Project project;
 
     @OneToMany(mappedBy = "team")
