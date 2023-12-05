@@ -52,6 +52,10 @@ public class Task {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @Transient
     private Map<String, String> comments = new HashMap<>();
 

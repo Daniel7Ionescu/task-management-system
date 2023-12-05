@@ -2,6 +2,7 @@ package com.teamrocket.tms.controllers;
 
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.services.project.ProjectService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO projectDTO) {
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody @Valid ProjectDTO projectDTO) {
         ProjectDTO createdProject = projectService.createProject(projectDTO);
         return ResponseEntity.ok(createdProject);
     }
