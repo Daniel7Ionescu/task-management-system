@@ -1,5 +1,6 @@
 package com.teamrocket.tms.services.project;
 
+import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.repositories.ProjectRepository;
@@ -15,31 +16,38 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectServiceValidation projectServiceValidation;
     private final ModelMapper modelMapper;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ModelMapper modelMapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ProjectServiceValidation projectServiceValidation, ModelMapper modelMapper) {
         this.projectRepository = projectRepository;
+        this.projectServiceValidation = projectServiceValidation;
         this.modelMapper = modelMapper;
     }
 
 
     @Override
     public ProjectDTO createProject(ProjectDTO projectDTO) {
+        projectServiceValidation.validateProjectAlreadyExists(projectDTO);
+
         Project project = modelMapper.map(projectDTO, Project.class);
         Project savedProject = projectRepository.save(project);
+
         return modelMapper.map(savedProject, ProjectDTO.class);
     }
 
     @Override
     public ProjectDTO getProjectById(Long id) {
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found."));
+                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + id + " not found."));
+
         return modelMapper.map(project, ProjectDTO.class);
     }
 
     @Override
     public List<ProjectDTO> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
+
         return projects.stream()
                 .map(project -> modelMapper.map(project, ProjectDTO.class))
                 .collect(Collectors.toList());

@@ -1,5 +1,7 @@
 package com.teamrocket.tms.exceptions;
 
+import com.teamrocket.tms.exceptions.project.ProjectAlreadyExistsException;
+import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
@@ -26,6 +28,16 @@ public class GlobalExceptionHandler {
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<Object> handleProjectNotFoundException(ProjectNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProjectAlreadyExistsException.class)
+    public ResponseEntity<Object> handleProjectAlreadyExistsException(ProjectAlreadyExistsException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
