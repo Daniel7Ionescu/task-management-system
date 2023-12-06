@@ -32,7 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = modelMapper.map(projectDTO, Project.class);
         Project savedProject = projectRepository.save(project);
-
+        log.info("Project created successfully with ID: {}", savedProject.getId());
         return modelMapper.map(savedProject, ProjectDTO.class);
     }
 
