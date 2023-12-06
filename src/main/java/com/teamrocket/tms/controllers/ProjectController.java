@@ -26,13 +26,9 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getProjectById(@PathVariable Long id) {
-        ProjectDTO project = projectService.getProjectById(id);
-        if (project != null) {
-            return ResponseEntity.ok(project);
-        } else {
-            return ResponseEntity.notFound().build();
+        ProjectDTO projectDTO = projectService.getProjectById(id);
+            return ResponseEntity.ok(projectDTO);
         }
-    }
 
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {
