@@ -13,7 +13,6 @@ public enum Role {
     
     private final String roleLabel;
 
-
     Role(String roleLabel) {
         this.roleLabel = roleLabel;
     }
