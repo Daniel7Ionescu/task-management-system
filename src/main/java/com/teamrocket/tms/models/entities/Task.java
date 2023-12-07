@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.teamrocket.tms.utils.enums.Priority;
 import com.teamrocket.tms.utils.enums.Status;
 import jakarta.persistence.*;
@@ -50,6 +51,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne

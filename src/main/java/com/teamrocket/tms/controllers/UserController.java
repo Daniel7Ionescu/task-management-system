@@ -46,6 +46,11 @@ public class UserController {
         return ResponseEntity.ok(userService.createTask(taskDTO, id));
     }
 
+    @PutMapping("/{userId}/tasks/{taskId}/{targetUserId}")
+    public ResponseEntity<UserDTO> assignTask(@PathVariable Long userId, @PathVariable Long taskId, @PathVariable Long targetUserId){
+        return ResponseEntity.ok(userService.assignTask(userId, taskId, targetUserId));
+    }
+
     @GetMapping("{userId}/tasks/{taskId}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long userId, @PathVariable Long taskId){
         return ResponseEntity.ok(userService.getTaskById(userId, taskId));

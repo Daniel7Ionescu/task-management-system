@@ -62,4 +62,9 @@ public class TaskServiceImpl implements TaskService {
     public Task updateTask(Task task) {
         return taskRepository.save(task);
     }
+
+    @Override
+    public void validateTaskCanBeAssigned(Task task) {
+        taskServiceValidation.validateTaskCanBeAssigned(task);
+    }
 }

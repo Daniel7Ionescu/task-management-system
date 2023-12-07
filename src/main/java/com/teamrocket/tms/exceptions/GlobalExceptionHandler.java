@@ -3,6 +3,7 @@ package com.teamrocket.tms.exceptions;
 import com.teamrocket.tms.exceptions.project.ProjectAlreadyExistsException;
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
+import com.teamrocket.tms.exceptions.task.TaskIsNotAssignableException;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
@@ -48,6 +49,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TaskAlreadyExistsException.class)
     public ResponseEntity<Object> handleTaskAlreadyExistsException(TaskAlreadyExistsException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(TaskIsNotAssignableException.class)
+    public ResponseEntity<Object> handleTaskIsNotAssignableException(TaskIsNotAssignableException e){
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
