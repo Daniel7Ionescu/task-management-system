@@ -57,4 +57,9 @@ public class TaskServiceImpl implements TaskService {
 
         return modelMapper.map(task, TaskDTO.class);
     }
+
+    @Override
+    public Task updateTask(Task task) {
+        return taskRepository.save(task);
+    }
 }
