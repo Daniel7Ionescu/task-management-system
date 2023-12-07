@@ -74,14 +74,14 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
 
         if (userDTO.getFirstName() != null) {
-            if (userDTO.getFirstName().length() < 3 && userDTO.getFirstName().length() > 30) {
+            if (userDTO.getFirstName().length() < 3 || userDTO.getFirstName().length() > 30) {
                 throw new UserPropertiesException("must be between 3 and 30 characters");
             } else {
                 user.setFirstName(userDTO.getFirstName());
             }
         }
         if (userDTO.getLastName() != null) {
-            if (userDTO.getFirstName().length() < 3 && userDTO.getFirstName().length() > 30) {
+            if (userDTO.getLastName().length() < 3 || userDTO.getLastName().length() > 30) {
                 throw new UserPropertiesException("must be between 3 and 30 characters");
             } else {
                 user.setLastName(userDTO.getLastName());
