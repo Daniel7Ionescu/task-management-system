@@ -27,7 +27,7 @@ public class Project {
     @Column(name = "description", length = 250)
     private String description;
 
-    @Transient
+    @OneToOne(mappedBy = "project")
     private Team team;
 
     @OneToMany(mappedBy = "project")

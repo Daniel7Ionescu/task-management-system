@@ -21,7 +21,8 @@ public class Team {
     @Column(name = "team_leader", length = 30)
     private String teamLeader;
 
-    @Transient
+    @OneToOne
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @OneToMany(mappedBy = "team")
