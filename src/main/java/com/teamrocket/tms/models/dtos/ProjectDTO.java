@@ -21,6 +21,8 @@ public class ProjectDTO {
 
     private boolean isComplete;
 
+    private boolean isDone;
+
     @NotBlank
     @Size(min = 3, max = 250, message = "must be between 3 and 250 characters")
     private String description;
