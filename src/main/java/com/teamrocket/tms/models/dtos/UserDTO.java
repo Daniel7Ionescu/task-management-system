@@ -2,7 +2,7 @@ package com.teamrocket.tms.models.dtos;
 
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.Team;
-import com.teamrocket.tms.utils.enums.RoleEnum;
+import com.teamrocket.tms.utils.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,7 +24,7 @@ public class UserDTO {
     @Size(min = 3, max = 30, message = "must be between 3 and 30 characters")
     private String lastName;
 
-    private RoleEnum roleEnum;
+    private Role role;
 
     @NotBlank
     @Email

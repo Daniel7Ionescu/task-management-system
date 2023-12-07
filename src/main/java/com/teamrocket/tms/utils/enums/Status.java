@@ -7,6 +7,7 @@ public enum Status {
 
     TO_DO("To Do"),
     IN_PROGRESS("In Progress"),
+    AWAITING_REVIEW("Awaiting Review"),
     IN_REVIEW("In Review"),
     DONE("Done");
 

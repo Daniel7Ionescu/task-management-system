@@ -2,10 +2,14 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.services.task.TaskService;
+import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
-import com.teamrocket.tms.services.task.TaskService;
+import com.teamrocket.tms.services.project.ProjectService;
+import com.teamrocket.tms.utils.enums.Role;
+
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,12 +26,14 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
 
     private final UserServiceValidation userServiceValidation;
+    private final ProjectService projectService;
 
-    public UserServiceImpl(UserRepository userRepository, TaskService taskService, ModelMapper modelMapper, UserServiceValidation userServiceValidation) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService) {
         this.userRepository = userRepository;
         this.taskService = taskService;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
+        this.projectService = projectService;
     }
 
     @Override
@@ -64,6 +70,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public TaskDTO createTask(TaskDTO taskDTO, long id) {
         User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found."));
+      
         return taskService.createTask(taskDTO, userEntity);
+    }
+  
+    @Override
+    public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved. From createProject", userId);
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+
+        return projectService.createProject(projectDTO);
     }
 }

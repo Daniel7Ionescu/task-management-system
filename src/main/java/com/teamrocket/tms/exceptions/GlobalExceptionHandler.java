@@ -8,6 +8,7 @@ import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
+import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -68,6 +69,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         return getResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserUnauthorizedActionException.class)
+    public ResponseEntity<Object> handleUserUnauthorizedActionException(UserUnauthorizedActionException e){
+        return getResponse(e, HttpStatus.UNAUTHORIZED);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {

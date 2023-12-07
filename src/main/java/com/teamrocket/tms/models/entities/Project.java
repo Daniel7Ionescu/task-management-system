@@ -24,6 +24,9 @@ public class Project {
     @Column(name = "is_complete")
     private boolean isComplete;
 
+    @Column(name = "is_done")
+    private boolean isDone;
+
     @Column(name = "description", length = 250)
     private String description;
 
