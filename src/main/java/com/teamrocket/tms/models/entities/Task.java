@@ -56,10 +56,12 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
-//    @ElementCollection
-//    @CollectionTable(name = "comment")
-//    @Column(name = "comments")
-    @Transient
+    @ElementCollection
+    @CollectionTable(name = "user_comments",
+            joinColumns = @JoinColumn(name = "task_id")
+    )
+    @MapKeyColumn(name = "user_name")
+    @Column(name = "comment")
     private Map<String, String> comments = new HashMap<>();
 
     @ElementCollection
