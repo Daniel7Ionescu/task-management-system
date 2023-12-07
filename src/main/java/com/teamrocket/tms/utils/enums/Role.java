@@ -3,7 +3,7 @@ package com.teamrocket.tms.utils.enums;
 import lombok.Getter;
 
 @Getter
-public enum RoleEnum {
+public enum Role {
 
     JUNIOR("Junior"),
     MEDIOR("Medior"),
@@ -13,8 +13,7 @@ public enum RoleEnum {
     
     private final String roleLabel;
 
-
-    RoleEnum(String roleLabel) {
+    Role(String roleLabel) {
         this.roleLabel = roleLabel;
     }
 }
