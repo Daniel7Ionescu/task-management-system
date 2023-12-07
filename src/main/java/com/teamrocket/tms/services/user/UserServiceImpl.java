@@ -1,6 +1,7 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
+import com.teamrocket.tms.exceptions.user.UserPropertiesException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
@@ -70,10 +71,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));;
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
 
-        if (userDTO.getFirstName() != null) user.setFirstName(userDTO.getFirstName());
-        if (userDTO.getLastName() != null) user.setLastName(userDTO.getLastName());
+        if (userDTO.getFirstName() != null) {
+            if (userDTO.getFirstName().length() < 3 && userDTO.getFirstName().length() > 30) {
+                throw new UserPropertiesException("must be between 3 and 30 characters");
+            } else {
+                user.setFirstName(userDTO.getFirstName());
+            }
+        }
+        if (userDTO.getLastName() != null) {
+            if (userDTO.getFirstName().length() < 3 && userDTO.getFirstName().length() > 30) {
+                throw new UserPropertiesException("must be between 3 and 30 characters");
+            } else {
+                user.setLastName(userDTO.getLastName());
+            }
+        }
         if (userDTO.getRole() != null) user.setRole(userDTO.getRole());
         if (userDTO.getEmail() != null) user.setEmail(userDTO.getEmail());
         if (userDTO.getTeam() != null) user.setTeam(userDTO.getTeam());
@@ -87,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public TaskDTO createTask(TaskDTO taskDTO, long id) {
         User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found."));
-      
+
         return taskService.createTask(taskDTO, userEntity);
     }
 
