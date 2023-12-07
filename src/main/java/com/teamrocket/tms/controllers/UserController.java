@@ -26,16 +26,6 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(userDTO));
     }
 
-    @PostMapping("/{id}/tasks")
-    public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable long id) {
-        return ResponseEntity.ok(userService.createTask(taskDTO, id));
-    }
-
-    @GetMapping("{userId}/tasks/{taskId}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long userId, @PathVariable Long taskId){
-        return ResponseEntity.ok(userService.getTaskById(userId, taskId));
-    }
-
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -46,10 +36,23 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(userId, userDTO));
+    }
+
+    @PostMapping("/{id}/tasks")
+    public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable long id) {
+        return ResponseEntity.ok(userService.createTask(taskDTO, id));
+    }
+
+    @GetMapping("{userId}/tasks/{taskId}")
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long userId, @PathVariable Long taskId){
+        return ResponseEntity.ok(userService.getTaskById(userId, taskId));
+    }
+
     @PostMapping("/{userId}/projects")
     public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO){
         return ResponseEntity.ok(userService.createProject(userId, projectDTO));
     }
-
-
 }
