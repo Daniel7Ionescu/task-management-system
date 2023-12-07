@@ -1,5 +1,6 @@
 package com.teamrocket.tms.controllers;
 
+import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.services.user.UserService;
 import jakarta.validation.Valid;
@@ -21,6 +22,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
+    }
+
+    @PostMapping("/{id}/tasks")
+    public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable long id) {
+        return ResponseEntity.ok(userService.createTask(taskDTO, id));
     }
 
     @GetMapping

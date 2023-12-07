@@ -1,9 +1,12 @@
 package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
+import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
+import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
+import com.teamrocket.tms.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,20 +19,26 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final TaskServiceValidation taskServiceValidation;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ModelMapper modelMapper, TaskServiceValidation taskServiceValidation) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, ModelMapper modelMapper, TaskServiceValidation taskServiceValidation) {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.taskServiceValidation = taskServiceValidation;
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO) {
+    public TaskDTO createTask(TaskDTO taskDTO, long id) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
+        User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + "not found"));
+
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
+        taskEntity.setCreatedBy(userEntity.getFirstName() + " " + userEntity.getLastName());
+
         Task savedTaskEntity = taskRepository.save(taskEntity);
         log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
 

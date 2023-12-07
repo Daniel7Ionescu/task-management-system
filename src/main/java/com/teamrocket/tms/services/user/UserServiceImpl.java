@@ -1,9 +1,11 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
+import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
+import com.teamrocket.tms.services.task.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,14 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TaskService taskService;
     private final ModelMapper modelMapper;
 
     private final UserServiceValidation userServiceValidation;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation) {
+    public UserServiceImpl(UserRepository userRepository, TaskService taskService, ModelMapper modelMapper, UserServiceValidation userServiceValidation) {
         this.userRepository = userRepository;
+        this.taskService = taskService;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
     }
@@ -55,5 +59,10 @@ public class UserServiceImpl implements UserService {
         log.info("User {} : {} inserted in db", savedUser.getId(), savedUser.getLastName());
 
         return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+    @Override
+    public TaskDTO createTask(TaskDTO taskDTO, long id) {
+        return taskService.createTask(taskDTO, id);
     }
 }
