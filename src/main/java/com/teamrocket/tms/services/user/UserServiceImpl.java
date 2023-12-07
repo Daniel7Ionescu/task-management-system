@@ -73,7 +73,16 @@ public class UserServiceImpl implements UserService {
       
         return taskService.createTask(taskDTO, userEntity);
     }
-  
+
+    @Override
+    public TaskDTO getTaskById(Long userId, Long taskId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User {} : {} tried to retrieve Task with id {} - from getTaskById", user.getId(), user.getLastName(), taskId);
+
+        return taskService.getTaskById(taskId);
+    }
+
     @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
         User user = userRepository.findById(userId)

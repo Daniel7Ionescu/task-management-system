@@ -31,6 +31,11 @@ public class UserController {
         return ResponseEntity.ok(userService.createTask(taskDTO, id));
     }
 
+    @GetMapping("{userId}/tasks/{taskId}")
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long userId, @PathVariable Long taskId){
+        return ResponseEntity.ok(userService.getTaskById(userId, taskId));
+    }
+
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -45,4 +50,6 @@ public class UserController {
     public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO){
         return ResponseEntity.ok(userService.createProject(userId, projectDTO));
     }
+
+
 }
