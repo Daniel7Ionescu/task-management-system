@@ -25,10 +25,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public TeamDTO createTeam(TeamDTO teamDTO) {
+    public TeamDTO createTeam(TeamDTO teamDTO, String creatorName) {
         teamServiceValidation.validateTeamAlreadyExists(teamDTO);
 
         Team team = modelMapper.map(teamDTO, Team.class);
+        team.setTeamLeader(creatorName);
         Team savedTeam = teamRepository.save(team);
         log.info("Team {} : {} inserted into db", savedTeam.getId(), savedTeam.getName());
 
