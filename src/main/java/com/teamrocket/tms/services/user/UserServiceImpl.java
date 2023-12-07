@@ -69,10 +69,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
-        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));;
 
-        User user = modelMapper.map(userDTO, User.class);
-        user.setId(userId);
+        if (userDTO.getFirstName() != null) user.setFirstName(userDTO.getFirstName());
+        if (userDTO.getLastName() != null) user.setLastName(userDTO.getLastName());
+        if (userDTO.getRole() != null) user.setRole(userDTO.getRole());
+        if (userDTO.getEmail() != null) user.setEmail(userDTO.getEmail());
+        if (userDTO.getTeam() != null) user.setTeam(userDTO.getTeam());
 
         User savedUser = userRepository.save(user);
         log.info("User {} : {} updated in db", savedUser.getId(), savedUser.getLastName());
