@@ -1,5 +1,7 @@
 package com.teamrocket.tms.services.user;
 
+
+import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 
@@ -13,5 +15,7 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
+
+    TaskDTO createTask(TaskDTO taskDTO, long id);
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
 }

@@ -1,12 +1,15 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
+import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
 import com.teamrocket.tms.utils.enums.Role;
+
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,14 +22,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TaskService taskService;
     private final ModelMapper modelMapper;
 
     private final UserServiceValidation userServiceValidation;
-
     private final ProjectService projectService;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService) {
         this.userRepository = userRepository;
+        this.taskService = taskService;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
         this.projectService = projectService;
@@ -63,6 +67,13 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(savedUser, UserDTO.class);
     }
 
+    @Override
+    public TaskDTO createTask(TaskDTO taskDTO, long id) {
+        User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found."));
+      
+        return taskService.createTask(taskDTO, userEntity);
+    }
+  
     @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
         User user = userRepository.findById(userId)

@@ -4,6 +4,7 @@ import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.utils.enums.Priority;
 import com.teamrocket.tms.utils.enums.Status;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -44,5 +45,6 @@ public class TaskDTO {
 
     private Map<String, String> comments = new HashMap<>();
 
+    @NotEmpty
     private Map<String, Boolean> objectives = new HashMap<>();
 }

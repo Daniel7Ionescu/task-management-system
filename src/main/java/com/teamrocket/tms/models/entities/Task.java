@@ -56,9 +56,19 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Transient
+    @ElementCollection
+    @CollectionTable(name = "user_comments",
+            joinColumns = @JoinColumn(name = "task_id")
+    )
+    @MapKeyColumn(name = "user_name")
+    @Column(name = "comment")
     private Map<String, String> comments = new HashMap<>();
 
-    @Transient
+    @ElementCollection
+    @CollectionTable(name = "objective_completion",
+            joinColumns = @JoinColumn(name = "task_id")
+    )
+    @MapKeyColumn(name = "objective_name")
+    @Column(name = "is_complete")
     private Map<String, Boolean> objectives = new HashMap<>();
 }

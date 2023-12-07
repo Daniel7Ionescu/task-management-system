@@ -20,7 +20,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.createTask(taskDTO));
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping
