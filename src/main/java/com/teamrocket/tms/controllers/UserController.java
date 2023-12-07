@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PostMapping("/create-project/{userId}")
+    @PostMapping("/{userId}/projects")
     public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO){
         return ResponseEntity.ok(userService.createProject(userId, projectDTO));
     }
