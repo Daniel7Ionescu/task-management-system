@@ -23,4 +23,6 @@ public interface UserService {
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
 
     TeamDTO createTeam(Long userId, TeamDTO teamDTO);
+
+    UserDTO updateUser(Long userId, UserDTO userDTO);
 }

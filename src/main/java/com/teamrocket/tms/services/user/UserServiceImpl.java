@@ -73,6 +73,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO updateUser(Long userId, UserDTO userDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));;
+
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
+
+        User savedUser = userRepository.save(user);
+        log.info("User {} : {} updated in db", savedUser.getId(), savedUser.getLastName());
+
+        return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+    @Override
     public TaskDTO createTask(TaskDTO taskDTO, long id) {
         User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found."));
       
