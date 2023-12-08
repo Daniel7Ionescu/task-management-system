@@ -3,6 +3,7 @@ package com.teamrocket.tms.controllers;
 
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
+import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.services.user.UserService;
 import jakarta.validation.Valid;
@@ -54,5 +55,10 @@ public class UserController {
     @PostMapping("/{userId}/projects")
     public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO){
         return ResponseEntity.ok(userService.createProject(userId, projectDTO));
+    }
+
+    @PostMapping("/{userId}/teams")
+    public ResponseEntity<TeamDTO> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamDTO teamDTO) {
+        return ResponseEntity.ok(userService.createTeam(userId, teamDTO));
     }
 }

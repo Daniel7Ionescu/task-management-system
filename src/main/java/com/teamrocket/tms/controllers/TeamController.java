@@ -20,7 +20,8 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<TeamDTO> createTeam(@Valid @RequestBody TeamDTO teamDTO){
-        return ResponseEntity.ok(teamService.createTeam(teamDTO));
+//        return ResponseEntity.ok(teamService.createTeam(teamDTO));
+        return null;
     }
 
     @GetMapping
