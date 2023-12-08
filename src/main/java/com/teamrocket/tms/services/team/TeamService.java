@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TeamService {
 
-    TeamDTO createTeam(TeamDTO teamDTO, String creatorName);
+    TeamDTO createTeam(TeamDTO teamDTO);
 
     List<TeamDTO> getAllTeams();
 

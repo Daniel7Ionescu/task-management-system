@@ -105,6 +105,6 @@ public class UserServiceImpl implements UserService {
         log.info("User {} : {} retrieved. From createTeam.", userId, user.getLastName());
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
 
-        return teamService.createTeam(teamDTO, user.getLastName());
+        return teamService.createTeam(teamDTO);
     }
 }
