@@ -4,7 +4,6 @@ import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
-import com.teamrocket.tms.repositories.ProjectRepository;
 import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
@@ -33,16 +32,14 @@ public class UserServiceImpl implements UserService {
     private final ProjectService projectService;
 
     private final TeamService teamService;
-    private final ProjectRepository projectRepository;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService, TeamService teamService, ProjectRepository projectRepository) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService, TeamService teamService) {
         this.userRepository = userRepository;
         this.taskService = taskService;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
         this.projectService = projectService;
         this.teamService = teamService;
-        this.projectRepository = projectRepository;
 
     }
 
@@ -131,12 +128,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteProject(Long userId, Long id) {
-        projectRepository.findById(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with the id " + id + "not found."));
+       ProjectDTO projectDTO =  projectService.getProjectById(id);
+               if (projectDTO == null) {
+                   throw new ProjectNotFoundException("Project with the id " + id + "not found.");
+               }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + "not found."));
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
-        projectRepository.deleteById(id);
+        projectService.deleteProject(id);
         log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
 }
