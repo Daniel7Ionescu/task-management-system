@@ -1,5 +1,6 @@
 package com.teamrocket.tms.services.user;
 
+import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
         this.userServiceValidation = userServiceValidation;
         this.projectService = projectService;
         this.teamService = teamService;
+
     }
 
     @Override
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));;
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
 
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -125,5 +127,18 @@ public class UserServiceImpl implements UserService {
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
 
         return teamService.createTeam(teamDTO);
+    }
+
+    @Override
+    public void deleteProject(Long userId, Long id) {
+       ProjectDTO projectDTO =  projectService.getProjectById(id);
+               if (projectDTO == null) {
+                   throw new ProjectNotFoundException("Project with the id " + id + "not found.");
+               }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + "not found."));
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+        projectService.deleteProject(id);
+        log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
 }
