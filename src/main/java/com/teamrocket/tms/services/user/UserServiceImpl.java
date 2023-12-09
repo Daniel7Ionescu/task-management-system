@@ -122,4 +122,11 @@ public class UserServiceImpl implements UserService {
 
         return teamService.createTeam(teamDTO);
     }
+    @Override
+    public List<TaskDTO> getAllTasksForUser(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved.",userId);
+        return taskService.getAllTasksForUser(userId);
+    }
 }

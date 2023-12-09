@@ -7,6 +7,7 @@ import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.services.user.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,5 +61,10 @@ public class UserController {
     @PostMapping("/{userId}/teams")
     public ResponseEntity<TeamDTO> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamDTO teamDTO) {
         return ResponseEntity.ok(userService.createTeam(userId, teamDTO));
+    }
+    @GetMapping("/{userId}/tasks")
+    public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@PathVariable Long userId) {
+        List<TaskDTO> tasks = userService.getAllTasksForUser(userId);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 }
