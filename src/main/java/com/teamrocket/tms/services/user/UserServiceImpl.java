@@ -64,6 +64,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         userServiceValidation.validateUserAlreadyExists(userDTO);
+        if (userDTO.getRole() == null){
+            userDTO.setRole(Role.JUNIOR);
+        }
 
         User user = modelMapper.map(userDTO, User.class);
         User savedUser = userRepository.save(user);
