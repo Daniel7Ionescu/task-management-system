@@ -3,12 +3,14 @@ package com.teamrocket.tms.services.user;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
+import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
+import com.teamrocket.tms.services.team.TeamService;
 import com.teamrocket.tms.utils.enums.Role;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +31,15 @@ public class UserServiceImpl implements UserService {
     private final UserServiceValidation userServiceValidation;
     private final ProjectService projectService;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService) {
+    private final TeamService teamService;
+
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService, TeamService teamService) {
         this.userRepository = userRepository;
         this.taskService = taskService;
         this.modelMapper = modelMapper;
         this.userServiceValidation = userServiceValidation;
         this.projectService = projectService;
+        this.teamService = teamService;
     }
 
     @Override
@@ -70,10 +75,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
-        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));;
 
-        User user = modelMapper.map(userDTO, User.class);
-        user.setId(userId);
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
 
         User savedUser = userRepository.save(user);
         log.info("User {} : {} updated in db", savedUser.getId(), savedUser.getLastName());
@@ -125,5 +132,15 @@ public class UserServiceImpl implements UserService {
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
 
         return projectService.createProject(projectDTO);
+    }
+
+    @Override
+    public TeamDTO createTeam(Long userId, TeamDTO teamDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User {} : {} retrieved. From createTeam.", userId, user.getLastName());
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+
+        return teamService.createTeam(teamDTO);
     }
 }
