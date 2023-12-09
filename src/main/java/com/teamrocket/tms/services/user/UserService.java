@@ -16,7 +16,7 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
-    TaskDTO createTask(TaskDTO taskDTO, long id);
+    TaskDTO createTask(TaskDTO taskDTO, Long userId);
 
     TaskDTO getTaskById(Long userId, Long taskId);
 

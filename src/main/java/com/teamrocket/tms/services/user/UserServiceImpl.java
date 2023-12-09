@@ -66,6 +66,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         userServiceValidation.validateUserAlreadyExists(userDTO);
+        if (userDTO.getRole() == null){
+            userDTO.setRole(Role.JUNIOR);
+        }
 
         User user = modelMapper.map(userDTO, User.class);
         User savedUser = userRepository.save(user);
@@ -90,10 +93,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, long id) {
-        User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found."));
-
-        return taskService.createTask(taskDTO, userEntity);
+    public TaskDTO createTask(TaskDTO taskDTO, Long userId) {
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        String userName = userEntity.getFirstName() + " " + userEntity.getLastName();
+      
+        return taskService.createTask(taskDTO, userName);
     }
 
     @Override
