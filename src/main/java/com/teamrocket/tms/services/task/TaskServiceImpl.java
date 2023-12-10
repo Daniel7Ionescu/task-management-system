@@ -3,6 +3,7 @@ package com.teamrocket.tms.services.task;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
+import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -60,5 +61,21 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task updateTask(Task task) {
         return taskRepository.save(task);
+    }
+
+    @Override
+    public void abandonTask(Long id,Long userId) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + "not found."));
+
+        if (task.getUser() == null || !task.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("User with id " + userId + " is not assigned to the task.");
+        }
+
+        User user = task.getUser();
+        user.getTasksForUser().remove(task);
+
+        task.setUser(null);
+        taskRepository.save(task);
     }
 }

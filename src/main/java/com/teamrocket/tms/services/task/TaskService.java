@@ -14,4 +14,6 @@ public interface TaskService {
     TaskDTO getTaskById(Long id);
 
     Task updateTask(Task task);
+
+    void abandonTask(Long id,Long userId);
 }

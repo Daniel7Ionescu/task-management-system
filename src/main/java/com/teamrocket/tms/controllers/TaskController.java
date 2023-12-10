@@ -3,6 +3,7 @@ package com.teamrocket.tms.controllers;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.services.task.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,5 +32,11 @@ public class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
+    }
+
+    @PostMapping("/{id}/abandon")
+    public ResponseEntity<String> abandonTask(@PathVariable Long id,@RequestParam Long userId) {
+        taskService.abandonTask(id,userId);
+        return new ResponseEntity<>("Task abandoned successufully.", HttpStatus.OK);
     }
 }
