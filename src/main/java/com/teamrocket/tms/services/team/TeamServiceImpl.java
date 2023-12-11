@@ -3,7 +3,6 @@ package com.teamrocket.tms.services.team;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
 import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.entities.Team;
-import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -59,7 +58,9 @@ public class TeamServiceImpl implements TeamService {
                 .orElseThrow(() -> new TeamNotFoundException("Team with id: " + teamId + " not found"));
         log.info("Team with id: {} retrieved", teamId);
 
-        team.setTeamLeader(leaderId);
+        teamServiceValidation.validateTeamAlreadyHasTeamLeader(team);
+
+        team.setTeamLeaderId(leaderId);
         Team savedTeam = teamRepository.save(team);
         log.info("Team {} : {} set teamLeader to {}", savedTeam.getId(), savedTeam.getName(), leaderId);
 

@@ -3,6 +3,7 @@ package com.teamrocket.tms.services.user;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
+import com.teamrocket.tms.models.entities.Team;
 import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
@@ -26,10 +27,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final TaskService taskService;
     private final ModelMapper modelMapper;
-
     private final UserServiceValidation userServiceValidation;
     private final ProjectService projectService;
-
     private final TeamService teamService;
 
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService, TeamService teamService) {
@@ -134,9 +133,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + leaderId + " not found."));
         log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
 
+        userServiceValidation.validateAreUsersEquals(user, leader);
+
         leader.setRole(Role.TEAMLEADER);
+        leader.setTeam(modelMapper.map(teamService.getTeamById(teamId), Team.class));
         User savedUser = userRepository.save(leader);
-        log.info("User {} : {} set role to PM. From assignTeamLeader.", savedUser.getId(), savedUser.getLastName());
+        log.info("User {} : {} added to the team {} set role to PM. From assignTeamLeader.", savedUser.getId(), savedUser.getLastName(), leader.getTeam());
 
         return teamService.assignTeamLeader(teamId, leaderId);
     }

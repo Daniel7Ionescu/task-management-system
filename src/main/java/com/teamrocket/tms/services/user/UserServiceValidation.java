@@ -8,4 +8,5 @@ public interface UserServiceValidation {
 
     void validateUserAlreadyExists(UserDTO userDTO);
     void validateUserRoleCanPerformAction(User user, Role...validRoles);
+    void validateAreUsersEquals(User user, User secondUser);
 }
