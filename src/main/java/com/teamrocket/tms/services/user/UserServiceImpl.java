@@ -122,4 +122,22 @@ public class UserServiceImpl implements UserService {
 
         return teamService.createTeam(teamDTO);
     }
+
+    @Override
+    public TeamDTO assignTeamLeader(Long userId, Long teamId, Long leaderId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+
+        User leader = userRepository.findById(leaderId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + leaderId + " not found."));
+        log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
+
+        leader.setRole(Role.TEAMLEADER);
+        User savedUser = userRepository.save(leader);
+        log.info("User {} : {} set role to PM. From assignTeamLeader.", savedUser.getId(), savedUser.getLastName());
+
+        return teamService.assignTeamLeader(teamId, leaderId);
+    }
 }
