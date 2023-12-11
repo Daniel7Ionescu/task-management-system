@@ -3,6 +3,7 @@ package com.teamrocket.tms.services.user;
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
@@ -107,6 +108,26 @@ public class UserServiceImpl implements UserService {
         log.info("User {} : {} tried to retrieve Task with id {} - from getTaskById", user.getId(), user.getLastName(), taskId);
 
         return taskService.getTaskById(taskId);
+    }
+
+    @Override
+    public UserDTO assignTask(Long userId, Long taskId, Long targetUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved.", userId);
+
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
+        log.info("User with the id {} retrieved.", targetUserId);
+
+        TaskDTO taskDTO = taskService.getTaskById(taskId);
+        Task task = modelMapper.map(taskDTO, Task.class);
+        taskService.validateTaskCanBeAssigned(task);
+
+        task.setUser(targetUser);
+        taskService.updateTask(task);
+
+        return modelMapper.map(targetUser, UserDTO.class);
     }
 
     @Override

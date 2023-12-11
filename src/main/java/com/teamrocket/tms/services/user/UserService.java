@@ -20,6 +20,8 @@ public interface UserService {
 
     TaskDTO getTaskById(Long userId, Long taskId);
 
+    UserDTO assignTask(Long userId, Long taskId, Long targetUserId);
+
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
 
     TeamDTO createTeam(Long userId, TeamDTO teamDTO);
