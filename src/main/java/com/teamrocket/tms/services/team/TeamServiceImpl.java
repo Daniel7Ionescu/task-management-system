@@ -51,4 +51,14 @@ public class TeamServiceImpl implements TeamService {
 
         return modelMapper.map(team, TeamDTO.class);
     }
+
+    @Override
+    public Team updateTeam(Team team) {
+        return teamRepository.save(team);
+    }
+
+    @Override
+    public void validateTeamIsAssignable(TeamDTO teamDTO) {
+        teamServiceValidation.validateTeamIsAssignable(teamDTO);
+    }
 }

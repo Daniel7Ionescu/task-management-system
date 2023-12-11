@@ -2,18 +2,19 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
+import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.dtos.TeamDTO;
-import com.teamrocket.tms.services.task.TaskService;
-import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
+import com.teamrocket.tms.models.entities.Project;
+import com.teamrocket.tms.models.entities.Team;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
+import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.services.team.TeamService;
 import com.teamrocket.tms.utils.enums.Role;
-
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -148,6 +149,28 @@ public class UserServiceImpl implements UserService {
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return teamService.createTeam(teamDTO);
+    }
+
+    @Override
+    public TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId) {
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User {} : {} retrieved.", userId, userEntity.getLastName());
+
+        userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECTMANAGER);
+
+        ProjectDTO projectDTO = projectService.getProjectById(targetProjectId);
+        TeamDTO teamDTO = teamService.getTeamById(teamId);
+
+        projectService.validateProjectIsAssignable(projectDTO);
+        teamService.validateTeamIsAssignable(teamDTO);
+
+        Project projectEntity = modelMapper.map(projectDTO, Project.class);
+        Team teamEntity = modelMapper.map(teamDTO, Team.class);
+
+        teamEntity.setProject(projectEntity);
+        teamService.updateTeam(teamEntity);
+
+        return modelMapper.map(teamEntity, TeamDTO.class);
     }
 
     @Override

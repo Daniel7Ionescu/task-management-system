@@ -5,4 +5,5 @@ import com.teamrocket.tms.models.dtos.TeamDTO;
 public interface TeamServiceValidation {
 
     void validateTeamAlreadyExists(TeamDTO teamDTO);
+    void validateTeamIsAssignable(TeamDTO teamDTO);
 }
