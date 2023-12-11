@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
         log.info("User with the id {} retrieved. From createProject", userId);
-        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return projectService.createProject(projectDTO);
     }
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
         log.info("User {} : {} retrieved. From createTeam.", userId, user.getLastName());
-        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return teamService.createTeam(teamDTO);
     }
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
                }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + "not found."));
-        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECTMANAGER);
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
         projectService.deleteProject(id);
         log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
