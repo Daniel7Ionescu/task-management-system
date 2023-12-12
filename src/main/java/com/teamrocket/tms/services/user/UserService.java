@@ -30,5 +30,7 @@ public interface UserService {
 
     TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId);
 
+    UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId);
+
     void deleteProject(Long userId, Long id);
 }

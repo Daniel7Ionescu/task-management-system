@@ -1,6 +1,7 @@
 package com.teamrocket.tms.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,5 +29,6 @@ public class Team {
     private Project project;
 
     @OneToMany(mappedBy = "team")
+    @JsonManagedReference
     private List<User> userList = new ArrayList<>();
 }
