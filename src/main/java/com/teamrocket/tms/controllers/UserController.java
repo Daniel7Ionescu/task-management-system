@@ -66,9 +66,9 @@ public class UserController {
         return ResponseEntity.ok(userService.createTeam(userId, teamDTO));
     }
 
-    @PostMapping("/{userId}/teams/{teamId}/{leaderId}")
-    public ResponseEntity<TeamDTO> assignTeamLeader(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long leaderId) {
-        return ResponseEntity.ok(userService.assignTeamLeader(userId, teamId, leaderId));
+    @PostMapping("/{userId}/teams/{teamId}/{targetUserId}")
+    public ResponseEntity<TeamDTO> assignTeamLeader(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long targetUserId) {
+        return ResponseEntity.ok(userService.assignTeamLeader(userId, teamId, targetUserId));
     }
 
     @PutMapping("/{userId}/teams/{teamId}/{targetProjectId}")
