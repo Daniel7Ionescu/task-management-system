@@ -2,7 +2,7 @@ package com.teamrocket.tms.controllers;
 
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.services.task.TaskService;
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +18,10 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(null);
-    }
+//    @PostMapping
+//    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO) {
+//        return ResponseEntity.ok(null);
+//    }
 
     @GetMapping
     public ResponseEntity<List<TaskDTO>> getTasks() {
