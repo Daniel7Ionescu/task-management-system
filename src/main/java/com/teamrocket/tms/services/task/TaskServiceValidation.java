@@ -6,5 +6,5 @@ import com.teamrocket.tms.models.entities.Task;
 public interface TaskServiceValidation {
 
     void validateTaskAlreadyExists(TaskDTO taskDTO);
-    void validateTaskCanBeAssigned(Task task);
+    void validateTaskCanBeAssigned(TaskDTO taskDTO);
 }

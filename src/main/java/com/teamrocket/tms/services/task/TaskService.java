@@ -16,5 +16,7 @@ public interface TaskService {
 
     Task updateTask(Task task);
 
-    void validateTaskCanBeAssigned(Task task);
+    TaskDTO assignUserToTask(User userEntity, Long taskId);
+
+    void validateTaskCanBeAssigned(TaskDTO taskDTO);
 }
