@@ -1,6 +1,7 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
+import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
@@ -17,7 +18,9 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     private final UserRepository userRepository;
 
-    public UserServiceValidationImpl(UserRepository userRepository) { this.userRepository = userRepository; }
+    public UserServiceValidationImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void validateUserAlreadyExists(UserDTO userDTO) {
@@ -29,10 +32,19 @@ public class UserServiceValidationImpl implements UserServiceValidation {
     }
 
     @Override
-    public void validateUserRoleCanPerformAction(User user, Role...validRoles){
-        if(Arrays.stream(validRoles).noneMatch(role -> role == user.getRole())){
+    public void validateUserRoleCanPerformAction(User user, Role... validRoles) {
+        if (Arrays.stream(validRoles).noneMatch(role -> role == user.getRole())) {
             log.info("User {} : {} with role {} tried action not permitted for this role.", user.getId(), user.getLastName(), user.getRole().getRoleLabel());
             throw new UserUnauthorizedActionException("Based on your role, you cannot perform this action");
         }
+    }
+
+    @Override
+    public User getValidUser(Long userId, String methodName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved. method: {}", userId, methodName);
+
+        return user;
     }
 }

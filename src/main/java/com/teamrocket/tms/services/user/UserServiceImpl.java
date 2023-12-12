@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(Long userId) {
-        User user = getValidUser(userId, "getUserById");
+        User user = userServiceValidation.getValidUser(userId, "getUserById");
 
         return modelMapper.map(user, UserDTO.class);
     }
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
-        User user = getValidUser(userId, "updateUser");
+        User user = userServiceValidation.getValidUser(userId, "updateUser");
 
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TaskDTO createTask(TaskDTO taskDTO, Long userId) {
-        User userEntity = getValidUser(userId, "createTask");
+        User userEntity = userServiceValidation.getValidUser(userId, "createTask");
         String userName = userEntity.getFirstName() + " " + userEntity.getLastName();
 
         return taskService.createTask(taskDTO, userName);
@@ -101,15 +101,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TaskDTO getTaskById(Long userId, Long taskId) {
-        getValidUser(userId, "getTaskById");
+        userServiceValidation.getValidUser(userId, "getTaskById");
 
         return taskService.getTaskById(taskId);
     }
 
     @Override
     public UserDTO assignTask(Long userId, Long taskId, Long targetUserId) {
-        getValidUser(userId, "assignTask");
-        User targetUser = getValidUser(targetUserId, "assignTask");
+        userServiceValidation.getValidUser(userId, "assignTask");
+        User targetUser = userServiceValidation.getValidUser(targetUserId, "assignTask");
 
         TaskDTO taskDTO = taskService.getTaskById(taskId);
         Task task = modelMapper.map(taskDTO, Task.class);
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
-        User user = getValidUser(userId, "createProject");
+        User user = userServiceValidation.getValidUser(userId, "createProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return projectService.createProject(projectDTO);
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TeamDTO createTeam(Long userId, TeamDTO teamDTO) {
-        User user = getValidUser(userId, "createTeam");
+        User user = userServiceValidation.getValidUser(userId, "createTeam");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return teamService.createTeam(teamDTO);
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId) {
-        User userEntity = getValidUser(userId, "assignProjectToTeam");
+        User userEntity = userServiceValidation.getValidUser(userId, "assignProjectToTeam");
         userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECT_MANAGER);
 
         ProjectDTO projectDTO = projectService.getProjectById(targetProjectId);
@@ -164,18 +164,12 @@ public class UserServiceImpl implements UserService {
             throw new ProjectNotFoundException("Project with the id " + id + "not found.");
         }
 
-        User user = getValidUser(userId, "deleteProject");
+        User user = userServiceValidation.getValidUser(userId, "deleteProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         projectService.deleteProject(id);
         log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
 
-    private User getValidUser(Long userId, String methodName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User with the id {} retrieved. method: {}", userId, methodName);
 
-        return user;
-    }
 }
