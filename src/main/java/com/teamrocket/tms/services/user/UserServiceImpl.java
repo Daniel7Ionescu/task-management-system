@@ -159,6 +159,7 @@ public class UserServiceImpl implements UserService {
         User targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
         log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
+        userServiceValidation.validateUserRoleCanPerformAction(targetUser, Role.SENIOR);
 
         userServiceValidation.validateAreUsersEquals(user, targetUser);
         teamService.validateTeamAlreadyHasTeamLeader(teamId);
