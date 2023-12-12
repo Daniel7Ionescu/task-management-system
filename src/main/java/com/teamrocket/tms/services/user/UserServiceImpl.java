@@ -46,10 +46,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + id + " not found."));
-        log.info("User with the id {} retrieved.", id);
+    public UserDTO getUserById(Long userId) {
+        User user = getValidUser(userId, "getUserById");
 
         return modelMapper.map(user, UserDTO.class);
     }
@@ -68,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         userServiceValidation.validateUserAlreadyExists(userDTO);
-        if (userDTO.getRole() == null){
+        if (userDTO.getRole() == null) {
             userDTO.setRole(Role.JUNIOR);
         }
 
@@ -81,8 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        User user = getValidUser(userId, "updateUser");
 
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -96,30 +93,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TaskDTO createTask(TaskDTO taskDTO, Long userId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        User userEntity = getValidUser(userId, "createTask");
         String userName = userEntity.getFirstName() + " " + userEntity.getLastName();
-      
+
         return taskService.createTask(taskDTO, userName);
     }
 
     @Override
     public TaskDTO getTaskById(Long userId, Long taskId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User {} : {} tried to retrieve Task with id {} - from getTaskById", user.getId(), user.getLastName(), taskId);
+        getValidUser(userId, "getTaskById");
 
         return taskService.getTaskById(taskId);
     }
 
     @Override
     public UserDTO assignTask(Long userId, Long taskId, Long targetUserId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User with the id {} retrieved.", userId);
-
-        User targetUser = userRepository.findById(targetUserId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
-        log.info("User with the id {} retrieved.", targetUserId);
+        getValidUser(userId, "assignTask");
+        User targetUser = getValidUser(targetUserId, "assignTask");
 
         TaskDTO taskDTO = taskService.getTaskById(taskId);
         Task task = modelMapper.map(taskDTO, Task.class);
@@ -133,9 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User with the id {} retrieved. From createProject", userId);
+        User user = getValidUser(userId, "createProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return projectService.createProject(projectDTO);
@@ -143,9 +131,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TeamDTO createTeam(Long userId, TeamDTO teamDTO) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User {} : {} retrieved. From createTeam.", userId, user.getLastName());
+        User user = getValidUser(userId, "createTeam");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return teamService.createTeam(teamDTO);
@@ -153,10 +139,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User {} : {} retrieved.", userId, userEntity.getLastName());
-
-        userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECTMANAGER);
+        User userEntity = getValidUser(userId, "assignProjectToTeam");
+        userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECT_MANAGER);
 
         ProjectDTO projectDTO = projectService.getProjectById(targetProjectId);
         TeamDTO teamDTO = teamService.getTeamById(teamId);
@@ -175,14 +159,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteProject(Long userId, Long id) {
-       ProjectDTO projectDTO =  projectService.getProjectById(id);
-               if (projectDTO == null) {
-                   throw new ProjectNotFoundException("Project with the id " + id + "not found.");
-               }
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + "not found."));
+        ProjectDTO projectDTO = projectService.getProjectById(id);
+        if (projectDTO == null) {
+            throw new ProjectNotFoundException("Project with the id " + id + "not found.");
+        }
+
+        User user = getValidUser(userId, "deleteProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
+
         projectService.deleteProject(id);
         log.info("Project with id {} deleted by user with id {}.", id, userId);
+    }
+
+    private User getValidUser(Long userId, String methodName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved. method: {}", userId, methodName);
+
+        return user;
     }
 }
