@@ -64,16 +64,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void validateTaskCanBeAssigned(TaskDTO taskDTO) {
-        taskServiceValidation.validateTaskCanBeAssigned(taskDTO);
+    public void validateTaskCanBeAssigned(Task task) {
+        taskServiceValidation.validateTaskCanBeAssigned(task);
     }
 
     @Override
     public TaskDTO assignUserToTask(User userEntity, Long taskId) {
-        TaskDTO taskDTO = getTaskById(taskId);
-        validateTaskCanBeAssigned(taskDTO);
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
+        log.info("Task with the id {} retrieved.", taskId);
 
-        Task task = modelMapper.map(taskDTO, Task.class);
+        taskServiceValidation.validateTaskCanBeAssigned(task);
+
         task.setUser(userEntity);
         Task savedTask = taskRepository.save(task);
 
