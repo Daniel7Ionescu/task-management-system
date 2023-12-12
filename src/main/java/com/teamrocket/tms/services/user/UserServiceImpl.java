@@ -150,24 +150,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TeamDTO assignTeamLeader(Long userId, Long teamId, Long leaderId) {
+    public TeamDTO assignTeamLeader(Long userId, Long teamId, Long targetUserId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
         log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
-        User leader = userRepository.findById(leaderId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + leaderId + " not found."));
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
         log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
 
-        userServiceValidation.validateAreUsersEquals(user, leader);
+        userServiceValidation.validateAreUsersEquals(user, targetUser);
+        teamService.validateTeamAlreadyHasTeamLeader(teamId);
 
-        leader.setRole(Role.TEAM_LEADER);
-        leader.setTeam(modelMapper.map(teamService.getTeamById(teamId), Team.class));
-        User savedUser = userRepository.save(leader);
-        log.info("User {} : {} added to the team {} set role to PM. From assignTeamLeader.", savedUser.getId(), savedUser.getLastName(), leader.getTeam());
+        targetUser.setRole(Role.TEAM_LEADER);
+        targetUser.setTeam(modelMapper.map(teamService.getTeamById(teamId), Team.class));
+        User savedUser = userRepository.save(targetUser);
+        log.info("User {} : {} added to the team {} set role to PM. From assignTeamLeader.", savedUser.getId(), savedUser.getLastName(), targetUser.getTeam());
 
-        return teamService.assignTeamLeader(teamId, leaderId);
+        return teamService.assignTeamLeader(teamId, targetUserId);
     }
 
     @Override

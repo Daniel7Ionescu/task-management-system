@@ -15,6 +15,8 @@ public interface TeamService {
 
     TeamDTO assignTeamLeader(Long teamId, Long leaderId);
 
+    void validateTeamAlreadyHasTeamLeader(Long teamId);
+
     Team updateTeam(Team team);
 
     void validateTeamIsAssignable(TeamDTO teamDTO);
