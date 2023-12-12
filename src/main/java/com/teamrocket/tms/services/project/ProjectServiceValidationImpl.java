@@ -1,6 +1,7 @@
 package com.teamrocket.tms.services.project;
 
 import com.teamrocket.tms.exceptions.project.ProjectAlreadyExistsException;
+import com.teamrocket.tms.exceptions.project.ProjectIsNotAssignableException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.repositories.ProjectRepository;
@@ -21,6 +22,13 @@ public class ProjectServiceValidationImpl implements ProjectServiceValidation {
 
         if (projectEntity != null) {
             throw new ProjectAlreadyExistsException("Project with name " + projectDTO.getName() + " already exists.");
+        }
+    }
+
+    @Override
+    public void validateProjectIsAssignable(ProjectDTO projectDTO) {
+        if (projectDTO.isComplete() || projectDTO.getTeam() != null) {
+            throw new ProjectIsNotAssignableException("Project: " + projectDTO.getId() + " : " + projectDTO.getName() + " not available / cannot be assigned.");
         }
     }
 }

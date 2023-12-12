@@ -1,6 +1,5 @@
 package com.teamrocket.tms.controllers;
 
-
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
@@ -42,9 +41,14 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));
     }
 
-    @PostMapping("/{id}/tasks")
-    public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable long id) {
-        return ResponseEntity.ok(userService.createTask(taskDTO, id));
+    @PostMapping("/{userId}/tasks")
+    public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable Long userId) {
+        return ResponseEntity.ok(userService.createTask(taskDTO, userId));
+    }
+
+    @PutMapping("/{userId}/tasks/{taskId}/{targetUserId}")
+    public ResponseEntity<UserDTO> assignTask(@PathVariable Long userId, @PathVariable Long taskId, @PathVariable Long targetUserId){
+        return ResponseEntity.ok(userService.assignTask(userId, taskId, targetUserId));
     }
 
     @GetMapping("{userId}/tasks/{taskId}")
@@ -65,5 +69,10 @@ public class UserController {
     @PostMapping("/{userId}/teams/{teamId}/{leaderId}")
     public ResponseEntity<TeamDTO> assignTeamLeader(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long leaderId) {
         return ResponseEntity.ok(userService.assignTeamLeader(userId, teamId, leaderId));
+    }
+
+    @PutMapping("/{userId}/teams/{teamId}/{targetProjectId}")
+    public ResponseEntity<TeamDTO> assignProjectToTeam(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long targetProjectId) {
+        return ResponseEntity.ok(userService.assignProjectToTeam(userId, teamId, targetProjectId));
     }
 }

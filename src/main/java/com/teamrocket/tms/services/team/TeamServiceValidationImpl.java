@@ -2,6 +2,7 @@ package com.teamrocket.tms.services.team;
 
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyHasTeamLeaderException;
+import com.teamrocket.tms.exceptions.team.TeamIsNotAssignableException;
 import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.entities.Team;
 import com.teamrocket.tms.repositories.TeamRepository;
@@ -29,6 +30,13 @@ public class TeamServiceValidationImpl implements TeamServiceValidation {
     public void validateTeamAlreadyHasTeamLeader(Team team) {
         if (team.getTeamLeaderId() != null) {
             throw new TeamAlreadyHasTeamLeaderException("Team with name: " + team.getName() + " already has a team leader.");
+        }
+    }
+
+        @Override
+    public void validateTeamIsAssignable(TeamDTO teamDTO) {
+        if (teamDTO.getProject() != null) {
+            throw new TeamIsNotAssignableException("Team: " + teamDTO.getId() + " : " + teamDTO.getName() + " not available / cannot be assigned.");
         }
     }
 }

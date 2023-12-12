@@ -1,6 +1,7 @@
 package com.teamrocket.tms.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.teamrocket.tms.utils.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Task> tasksForUser = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)

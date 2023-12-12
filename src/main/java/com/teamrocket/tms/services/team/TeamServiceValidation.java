@@ -8,4 +8,6 @@ public interface TeamServiceValidation {
     void validateTeamAlreadyExists(TeamDTO teamDTO);
 
     void validateTeamAlreadyHasTeamLeader(Team team);
+
+    void validateTeamIsAssignable(TeamDTO teamDTO);
 }

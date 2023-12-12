@@ -3,7 +3,6 @@ package com.teamrocket.tms.services.task;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
-import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -27,11 +26,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, User userEntity) {
+    public TaskDTO createTask(TaskDTO taskDTO, String userName) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
-        taskEntity.setCreatedBy(userEntity.getFirstName() + " " + userEntity.getLastName());
+        taskEntity.setCreatedBy(userName);
 
         Task savedTaskEntity = taskRepository.save(taskEntity);
         log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
@@ -61,5 +60,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task updateTask(Task task) {
         return taskRepository.save(task);
+    }
+
+    @Override
+    public void validateTaskCanBeAssigned(Task task) {
+        taskServiceValidation.validateTaskCanBeAssigned(task);
     }
 }

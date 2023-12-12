@@ -53,6 +53,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+<<<<<<< HEAD
     public TeamDTO assignTeamLeader(Long teamId, Long leaderId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException("Team with id: " + teamId + " not found"));
@@ -65,5 +66,14 @@ public class TeamServiceImpl implements TeamService {
         log.info("Team {} : {} set teamLeader to {}", savedTeam.getId(), savedTeam.getName(), leaderId);
 
         return modelMapper.map(savedTeam, TeamDTO.class);
+=======
+    public Team updateTeam(Team team) {
+        return teamRepository.save(team);
+    }
+
+    @Override
+    public void validateTeamIsAssignable(TeamDTO teamDTO) {
+        teamServiceValidation.validateTeamIsAssignable(teamDTO);
+>>>>>>> dev
     }
 }

@@ -57,4 +57,9 @@ public class ProjectServiceImpl implements ProjectService {
     public void deleteProject(Long id) {
         projectRepository.deleteById(id);
     }
+
+    @Override
+    public void validateProjectIsAssignable(ProjectDTO projectDTO) {
+        projectServiceValidation.validateProjectIsAssignable(projectDTO);
+    }
 }
