@@ -2,14 +2,9 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
-import com.teamrocket.tms.models.dtos.ProjectDTO;
-import com.teamrocket.tms.models.dtos.TaskDTO;
-import com.teamrocket.tms.models.entities.Task;
-import com.teamrocket.tms.models.dtos.TeamDTO;
-import com.teamrocket.tms.models.dtos.UserDTO;
-import com.teamrocket.tms.models.entities.Project;
-import com.teamrocket.tms.models.entities.Team;
-import com.teamrocket.tms.models.entities.User;
+import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
+import com.teamrocket.tms.models.dtos.*;
+import com.teamrocket.tms.models.entities.*;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
 import com.teamrocket.tms.services.task.TaskService;
@@ -89,7 +84,35 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDTO.getEmail());
 
         User savedUser = userRepository.save(user);
-        log.info("User {} : {} updated in db", savedUser.getId(), savedUser.getLastName());
+        log.info("User {} : {} updated in db.", savedUser.getId(), savedUser.getLastName());
+
+        return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+    @Override
+    public UserDTO updateUserRole(Long userId, RoleRequestBodyDTO roleRequestBodyDTO, Long targetUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        log.info("User with the id {} retrieved. From updateUserRole.", userId);
+
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
+        log.info("User with the id {} retrieved. From updateUserRole.", userId);
+
+        if (user.getRole().getId() <= targetUser.getRole().getId()) {
+            throw new UserUnauthorizedActionException("Based on user role, the action cannot be performed.");
+        }
+
+        Role role = roleRequestBodyDTO.getRole();
+
+        if (user.getRole().getId() <= role.getId()) {
+            throw new UserUnauthorizedActionException("Based on user role, the action cannot be performed.");
+        }
+
+        targetUser.setRole(role);
+
+        User savedUser = userRepository.save(targetUser);
+        log.info("User {} : {} inserted in db.", savedUser.getId(), savedUser.getLastName());
 
         return modelMapper.map(savedUser, UserDTO.class);
     }

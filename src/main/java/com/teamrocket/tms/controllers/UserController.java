@@ -5,6 +5,7 @@ import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
+import com.teamrocket.tms.models.dtos.RoleRequestBodyDTO;
 import com.teamrocket.tms.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,11 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));
+    }
+
+    @PutMapping("/{userId}/{targetUserId}")
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody RoleRequestBodyDTO roleRequestBodyDTO, @PathVariable Long targetUserId) {
+        return ResponseEntity.ok(userService.updateUserRole(userId, roleRequestBodyDTO, targetUserId));
     }
 
     @PostMapping("/{userId}/tasks")
