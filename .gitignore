@@ -21,6 +21,7 @@ target/
 .mvn
 mvnw
 mvnw.cmd
+.fastRequest
 
 ### NetBeans ###
 /nbproject/private/

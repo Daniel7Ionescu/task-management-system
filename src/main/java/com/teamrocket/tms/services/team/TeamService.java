@@ -13,6 +13,10 @@ public interface TeamService {
 
     TeamDTO getTeamById(Long id);
 
+    TeamDTO assignTeamLeader(Long teamId, Long leaderId);
+
+    void validateTeamAlreadyHasTeamLeader(Long teamId);
+
     Team updateTeam(Team team);
 
     void validateTeamIsAssignable(TeamDTO teamDTO);

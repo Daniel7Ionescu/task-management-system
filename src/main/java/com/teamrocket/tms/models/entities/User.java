@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.teamrocket.tms.utils.enums.Role;
 import jakarta.persistence.*;
@@ -35,5 +36,6 @@ public class User {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
+    @JsonBackReference
     private Team team;
 }

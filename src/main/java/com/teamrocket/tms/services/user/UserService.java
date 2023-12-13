@@ -16,6 +16,10 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
+    UserDTO updateUser(Long userId, UserDTO userDTO);
+
+    UserDTO updateUserRole(Long userId, UserDTO userDTO, Long targetUserId);
+
     TaskDTO createTask(TaskDTO taskDTO, Long userId);
 
     TaskDTO getTaskById(Long userId, Long taskId);
@@ -26,9 +30,13 @@ public interface UserService {
 
     TeamDTO createTeam(Long userId, TeamDTO teamDTO);
 
+    TeamDTO assignTeamLeader(Long userId, Long teamId, Long leaderId);
+
     UserDTO updateUser(Long userId, UserDTO userDTO);
 
     TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId);
+
+    UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId);
 
     void deleteProject(Long userId, Long id);
 }
