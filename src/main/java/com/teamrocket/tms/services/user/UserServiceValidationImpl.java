@@ -1,6 +1,7 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
+import com.teamrocket.tms.exceptions.user.UserAlreadyInATeamException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
@@ -25,6 +26,13 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
         if (userFound != null) {
             throw new UserAlreadyExistsException("A user with the mail " + userDTO.getEmail() + " already exists.");
+        }
+    }
+
+    @Override
+    public void validateUserAlreadyInATeam(UserDTO userDTO) {
+        if (userDTO.getTeam() != null) {
+            throw new UserAlreadyInATeamException("User with name " + userDTO.getFirstName() + " already in a team: " + userDTO.getTeam().getName());
         }
     }
 

@@ -71,4 +71,9 @@ public class UserController {
     public ResponseEntity<TeamDTO> assignProjectToTeam(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long targetProjectId) {
         return ResponseEntity.ok(userService.assignProjectToTeam(userId, teamId, targetProjectId));
     }
+
+    @PutMapping("/{userId}/teams/{teamId}/assignUser/{targetUserId}")
+    public ResponseEntity<UserDTO> assignUserToTeam(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long targetUserId) {
+        return ResponseEntity.ok(userService.assignUserToTeam(userId, teamId, targetUserId));
+    }
 }

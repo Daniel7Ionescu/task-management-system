@@ -8,8 +8,8 @@ public enum Role {
     JUNIOR("Junior"),
     MEDIOR("Medior"),
     SENIOR("Senior"),
-    PROJECT_MANAGER("ProjectManager"),
-    TEAM_LEADER("TeamLeader");
+    PROJECT_MANAGER("Project Manager"),
+    TEAM_LEADER("Team Leader");
     
     private final String roleLabel;
 

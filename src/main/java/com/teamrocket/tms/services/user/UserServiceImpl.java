@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
         User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
         log.info("User {} : {} retrieved.", userId, userEntity.getLastName());
 
-        userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECTMANAGER);
+        userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECT_MANAGER);
 
         ProjectDTO projectDTO = projectService.getProjectById(targetProjectId);
         TeamDTO teamDTO = teamService.getTeamById(teamId);
@@ -171,6 +171,26 @@ public class UserServiceImpl implements UserService {
         teamService.updateTeam(teamEntity);
 
         return modelMapper.map(teamEntity, TeamDTO.class);
+    }
+
+    @Override
+    public UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId) {
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+
+        userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECT_MANAGER, Role.TEAM_LEADER);
+
+        TeamDTO teamDTO = teamService.getTeamById(teamId);
+        UserDTO targetUserDTO = getUserById(targetUserId);
+
+        userServiceValidation.validateUserAlreadyInATeam(targetUserDTO);
+
+        Team teamEntity = modelMapper.map(teamDTO, Team.class);
+        User targetUserEntity = modelMapper.map(targetUserDTO, User.class);
+
+        targetUserEntity.setTeam(teamEntity);
+        User savedUser = userRepository.save(targetUserEntity);
+
+        return modelMapper.map(savedUser, UserDTO.class);
     }
 
     @Override
