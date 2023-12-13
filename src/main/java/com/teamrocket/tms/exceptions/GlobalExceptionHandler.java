@@ -6,7 +6,9 @@ import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
 import com.teamrocket.tms.exceptions.task.TaskIsNotAssignableException;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
+import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
+import com.teamrocket.tms.exceptions.team.TeamAlreadyHasTeamLeaderException;
 import com.teamrocket.tms.exceptions.team.TeamIsNotAssignableException;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
@@ -75,8 +77,18 @@ public class GlobalExceptionHandler {
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(TeamAlreadyHasTeamLeaderException.class)
+    public ResponseEntity<Object> handleTeamAlreadyHasTeamLeader(TeamAlreadyHasTeamLeaderException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(TeamIsNotAssignableException.class)
     public ResponseEntity<Object> handleTeamIsNotAssignableException(TeamIsNotAssignableException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UsersAreEqualsException.class)
+    public ResponseEntity<Object> handlePMCannotBeTM(UsersAreEqualsException e) {
         return getResponse(e, HttpStatus.CONFLICT);
     }
 

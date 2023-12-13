@@ -2,6 +2,7 @@ package com.teamrocket.tms.services.team;
 
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
 import com.teamrocket.tms.models.dtos.TeamDTO;
+import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.Team;
 import com.teamrocket.tms.repositories.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,27 @@ public class TeamServiceImpl implements TeamService {
         log.info("Team with id: {} retrieved", id);
 
         return modelMapper.map(team, TeamDTO.class);
+    }
+
+    @Override
+    public TeamDTO assignTeamLeader(Long teamId, Long leaderId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException("Team with id: " + teamId + " not found"));
+        log.info("Team with id: {} retrieved", teamId);
+
+        team.setTeamLeaderId(leaderId);
+        Team savedTeam = teamRepository.save(team);
+        log.info("Team {} : {} set teamLeader to {}", savedTeam.getId(), savedTeam.getName(), leaderId);
+
+        return modelMapper.map(savedTeam, TeamDTO.class);
+    }
+
+    @Override
+    public void validateTeamAlreadyHasTeamLeader(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException("Team with id: " + teamId + " not found"));
+
+        teamServiceValidation.validateTeamAlreadyHasTeamLeader(team);
     }
 
     @Override
