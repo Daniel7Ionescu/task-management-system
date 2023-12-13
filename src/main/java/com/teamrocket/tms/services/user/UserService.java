@@ -16,6 +16,10 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
+    UserDTO updateUser(Long userId, UserDTO userDTO);
+
+    UserDTO updateUserRole(Long userId, UserDTO userDTO, Long targetUserId);
+
     TaskDTO createTask(TaskDTO taskDTO, Long userId);
 
     TaskDTO getTaskById(Long userId, Long taskId);

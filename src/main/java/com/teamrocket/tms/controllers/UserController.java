@@ -41,6 +41,11 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));
     }
 
+    @PutMapping("/{userId}/{targetUserId}")
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long userId, @RequestBody UserDTO userDTO, @PathVariable Long targetUserId) {
+        return ResponseEntity.ok(userService.updateUserRole(userId, userDTO, targetUserId));
+    }
+
     @PostMapping("/{userId}/tasks")
     public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable Long userId) {
         return ResponseEntity.ok(userService.createTask(taskDTO, userId));
