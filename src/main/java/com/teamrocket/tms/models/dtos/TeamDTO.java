@@ -17,8 +17,7 @@ public class TeamDTO {
     @Size(min = 3, max = 30, message = "must be between 3 and 30 characters")
     private String name;
 
-    @Size(max = 30, message = "max characters is 30")
-    private String teamLeader;
+    private Long teamLeaderId;
 
     private Project project;
 

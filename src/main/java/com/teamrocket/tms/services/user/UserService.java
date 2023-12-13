@@ -16,15 +16,29 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
-    TaskDTO createTask(TaskDTO taskDTO, long id);
+    UserDTO updateUser(Long userId, UserDTO userDTO);
+
+    UserDTO updateUserRole(Long userId, UserDTO userDTO, Long targetUserId);
+
+    TaskDTO createTask(TaskDTO taskDTO, Long userId);
 
     TaskDTO getTaskById(Long userId, Long taskId);
+
+    UserDTO assignTask(Long userId, Long taskId, Long targetUserId);
 
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
 
     TeamDTO createTeam(Long userId, TeamDTO teamDTO);
 
+    TeamDTO assignTeamLeader(Long userId, Long teamId, Long leaderId);
+
     UserDTO updateUser(Long userId, UserDTO userDTO);
 
     List<TaskDTO> getAllTasksForUser(Long userId);
+
+    TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId);
+
+    UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId);
+
+    void deleteProject(Long userId, Long id);
 }

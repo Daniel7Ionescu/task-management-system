@@ -3,7 +3,6 @@ package com.teamrocket.tms.services.task;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
-import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -28,11 +27,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, User userEntity) {
+    public TaskDTO createTask(TaskDTO taskDTO, String userName) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
-        taskEntity.setCreatedBy(userEntity.getFirstName() + " " + userEntity.getLastName());
+        taskEntity.setCreatedBy(userName);
 
         Task savedTaskEntity = taskRepository.save(taskEntity);
         log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
@@ -63,11 +62,31 @@ public class TaskServiceImpl implements TaskService {
     public Task updateTask(Task task) {
         return taskRepository.save(task);
     }
+
     @Override
     public List<TaskDTO> getAllTasksForUser(Long userId) {
         List<Task> tasks = taskRepository.findByUserId(userId);
         return tasks.stream()
                 .map(task -> modelMapper.map(task,TaskDTO.class))
                 .collect(Collectors.toList());
+    }
+  
+    @Override
+    public void validateTaskCanBeAssigned(Task task) {
+        taskServiceValidation.validateTaskCanBeAssigned(task);
+    }
+
+    @Override
+    public TaskDTO assignUserToTask(User userEntity, Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
+        log.info("Task with the id {} retrieved.", taskId);
+
+        taskServiceValidation.validateTaskCanBeAssigned(task);
+
+        task.setUser(userEntity);
+        Task savedTask = taskRepository.save(task);
+
+        return modelMapper.map(savedTask, TaskDTO.class);
     }
 }

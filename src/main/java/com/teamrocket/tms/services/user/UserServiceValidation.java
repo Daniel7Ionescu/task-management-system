@@ -7,5 +7,12 @@ import com.teamrocket.tms.utils.enums.Role;
 public interface UserServiceValidation {
 
     void validateUserAlreadyExists(UserDTO userDTO);
+
+    void validateUserAlreadyInATeam(UserDTO userDTO);
+  
     void validateUserRoleCanPerformAction(User user, Role...validRoles);
+  
+    User getValidUser(Long userId, String methodName);
+  
+    void validateAreUsersEquals(User user, User secondUser);
 }
