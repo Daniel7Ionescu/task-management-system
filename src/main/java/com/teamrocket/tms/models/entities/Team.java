@@ -1,5 +1,8 @@
 package com.teamrocket.tms.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,13 +21,15 @@ public class Team {
     @Column(name = "name", length = 30, nullable = false, unique = true)
     private String name;
 
-    @Column(name = "team_leader", length = 30)
-    private String teamLeader;
+    @Column(name = "team_leader")
+    private Long teamLeaderId;
 
     @OneToOne
     @JoinColumn(name = "project_id")
+    @JsonBackReference
     private Project project;
 
     @OneToMany(mappedBy = "team")
+    @JsonManagedReference
     private List<User> userList = new ArrayList<>();
 }

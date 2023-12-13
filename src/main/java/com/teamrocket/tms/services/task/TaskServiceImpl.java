@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,11 +28,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, User userEntity) {
+    public TaskDTO createTask(TaskDTO taskDTO, String userName) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
-        taskEntity.setCreatedBy(userEntity.getFirstName() + " " + userEntity.getLastName());
+        taskEntity.setCreatedBy(userName);
 
         Task savedTaskEntity = taskRepository.save(taskEntity);
         log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
@@ -56,5 +57,37 @@ public class TaskServiceImpl implements TaskService {
         log.info("Task with the id {} retrieved.", id);
 
         return modelMapper.map(task, TaskDTO.class);
+    }
+
+    @Override
+    public Task updateTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    @Override
+    public List<TaskDTO> getAllTasksForUser(Long userId) {
+        List<Task> tasks = taskRepository.findByUserId(userId);
+        return tasks.stream()
+                .map(task -> modelMapper.map(task,TaskDTO.class))
+                .collect(Collectors.toList());
+    }
+  
+    @Override
+    public void validateTaskCanBeAssigned(Task task) {
+        taskServiceValidation.validateTaskCanBeAssigned(task);
+    }
+
+    @Override
+    public TaskDTO assignUserToTask(User userEntity, Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
+        log.info("Task with the id {} retrieved.", taskId);
+
+        taskServiceValidation.validateTaskCanBeAssigned(task);
+
+        task.setUser(userEntity);
+        Task savedTask = taskRepository.save(task);
+
+        return modelMapper.map(savedTask, TaskDTO.class);
     }
 }

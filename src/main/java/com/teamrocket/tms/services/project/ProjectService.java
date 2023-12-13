@@ -14,4 +14,6 @@ public interface ProjectService {
 
     void deleteProject(Long id);
 
+    void validateProjectIsAssignable(ProjectDTO projectDTO);
+
 }

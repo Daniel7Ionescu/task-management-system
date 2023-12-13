@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,6 +32,7 @@ public class Project {
     private String description;
 
     @OneToOne(mappedBy = "project")
+    @JsonManagedReference
     private Team team;
 
     @OneToMany(mappedBy = "project")

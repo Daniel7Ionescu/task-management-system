@@ -3,6 +3,7 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
+import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 
 import java.util.List;
@@ -15,7 +16,27 @@ public interface UserService {
 
     UserDTO getUserById(Long id);
 
+    UserDTO updateUser(Long userId, UserDTO userDTO);
 
-    TaskDTO createTask(TaskDTO taskDTO, long id);
+    UserDTO updateUserRole(Long userId, UserDTO userDTO, Long targetUserId);
+
+    TaskDTO createTask(TaskDTO taskDTO, Long userId);
+
+    TaskDTO getTaskById(Long userId, Long taskId);
+
+    UserDTO assignTask(Long userId, Long taskId, Long targetUserId);
+
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
+
+    TeamDTO createTeam(Long userId, TeamDTO teamDTO);
+
+    TeamDTO assignTeamLeader(Long userId, Long teamId, Long leaderId);
+
+    List<TaskDTO> getAllTasksForUser(Long userId);
+
+    TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId);
+
+    UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId);
+
+    void deleteProject(Long userId, Long id);
 }
