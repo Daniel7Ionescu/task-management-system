@@ -1,5 +1,6 @@
 package com.teamrocket.tms.services.user;
 
+import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
 import com.teamrocket.tms.exceptions.user.UserAlreadyInATeamException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
@@ -40,7 +41,14 @@ public class UserServiceValidationImpl implements UserServiceValidation {
     public void validateUserRoleCanPerformAction(User user, Role...validRoles){
         if(Arrays.stream(validRoles).noneMatch(role -> role == user.getRole())){
             log.info("User {} : {} with role {} tried action not permitted for this role.", user.getId(), user.getLastName(), user.getRole().getRoleLabel());
-            throw new UserUnauthorizedActionException("Based on your role, you cannot perform this action");
+            throw new UserUnauthorizedActionException("Based on user role, action cannot be completed.");
+        }
+    }
+
+    @Override
+    public void validateAreUsersEquals(User user, User secondUser) {
+        if (user.equals(secondUser)) {
+            throw new UsersAreEqualsException("Users are the same.");
         }
     }
 }

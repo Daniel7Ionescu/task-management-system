@@ -10,4 +10,5 @@ public interface UserServiceValidation {
 
     void validateUserAlreadyInATeam(UserDTO userDTO);
     void validateUserRoleCanPerformAction(User user, Role...validRoles);
+    void validateAreUsersEquals(User user, User secondUser);
 }

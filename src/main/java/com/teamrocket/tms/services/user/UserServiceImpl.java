@@ -2,17 +2,17 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
-import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TaskDTO;
-import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.dtos.TeamDTO;
+import com.teamrocket.tms.models.entities.Team;
+import com.teamrocket.tms.services.task.TaskService;
+import com.teamrocket.tms.models.dtos.ProjectDTO;
+import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Project;
-import com.teamrocket.tms.models.entities.Team;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
-import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.services.team.TeamService;
 import com.teamrocket.tms.utils.enums.Role;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +29,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final TaskService taskService;
     private final ModelMapper modelMapper;
-
     private final UserServiceValidation userServiceValidation;
     private final ProjectService projectService;
-
     private final TeamService teamService;
 
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserServiceValidation userServiceValidation, ProjectService projectService, TaskService taskService, TeamService teamService) {
@@ -149,6 +147,29 @@ public class UserServiceImpl implements UserService {
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return teamService.createTeam(teamDTO);
+    }
+
+    @Override
+    public TeamDTO assignTeamLeader(Long userId, Long teamId, Long targetUserId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
+
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
+        log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
+
+        userServiceValidation.validateAreUsersEquals(user, targetUser);
+        teamService.validateTeamAlreadyHasTeamLeader(teamId);
+        userServiceValidation.validateUserRoleCanPerformAction(targetUser, Role.SENIOR);
+
+        targetUser.setRole(Role.TEAM_LEADER);
+        targetUser.setTeam(modelMapper.map(teamService.getTeamById(teamId), Team.class));
+        User savedUser = userRepository.save(targetUser);
+        log.info("User {} : {} added to the team {} set role to PM. From assignTeamLeader.", savedUser.getId(), savedUser.getLastName(), targetUser.getTeam());
+
+        return teamService.assignTeamLeader(teamId, targetUserId);
     }
 
     @Override

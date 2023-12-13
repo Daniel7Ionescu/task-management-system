@@ -1,6 +1,5 @@
 package com.teamrocket.tms.controllers;
 
-
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
@@ -65,6 +64,11 @@ public class UserController {
     @PostMapping("/{userId}/teams")
     public ResponseEntity<TeamDTO> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamDTO teamDTO) {
         return ResponseEntity.ok(userService.createTeam(userId, teamDTO));
+    }
+
+    @PostMapping("/{userId}/teams/{teamId}/{targetUserId}")
+    public ResponseEntity<TeamDTO> assignTeamLeader(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long targetUserId) {
+        return ResponseEntity.ok(userService.assignTeamLeader(userId, teamId, targetUserId));
     }
 
     @PutMapping("/{userId}/teams/{teamId}/{targetProjectId}")
