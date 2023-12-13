@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUserRole(Long userId, RoleRequestBodyDTO roleRequestBodyDTO, Long targetUserId) {
+    public UserDTO updateUserRole(Long userId, UserDTO userDTO, Long targetUserId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
         log.info("User with the id {} retrieved. From updateUserRole.", userId);
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
             throw new UserUnauthorizedActionException("Based on user role, the action cannot be performed.");
         }
 
-        Role role = roleRequestBodyDTO.getRole();
+        Role role = userDTO.getRole();
 
         if (user.getRole().getId() <= role.getId()) {
             throw new UserUnauthorizedActionException("Based on user role, the action cannot be performed.");
