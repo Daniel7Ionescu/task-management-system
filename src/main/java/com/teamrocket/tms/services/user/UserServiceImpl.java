@@ -141,12 +141,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
         log.info("User with the id {} retrieved.", targetUserId);
 
-        TaskDTO taskDTO = taskService.getTaskById(taskId);
-        Task task = modelMapper.map(taskDTO, Task.class);
-        taskService.validateTaskCanBeAssigned(task);
-
-        task.setUser(targetUser);
-        taskService.updateTask(task);
+        taskService.assignUserToTask(targetUser, taskId);
 
         return modelMapper.map(targetUser, UserDTO.class);
     }
