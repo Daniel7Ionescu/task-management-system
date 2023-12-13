@@ -32,8 +32,6 @@ public interface UserService {
 
     TeamDTO assignTeamLeader(Long userId, Long teamId, Long leaderId);
 
-    UserDTO updateUser(Long userId, UserDTO userDTO);
-
     List<TaskDTO> getAllTasksForUser(Long userId);
 
     TeamDTO assignProjectToTeam(Long userId, Long teamId, Long targetProjectId);

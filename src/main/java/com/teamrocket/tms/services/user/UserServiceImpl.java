@@ -7,6 +7,7 @@ import com.teamrocket.tms.models.dtos.*;
 import com.teamrocket.tms.models.entities.*;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
+import com.teamrocket.tms.services.task.TaskService;
 import com.teamrocket.tms.services.team.TeamService;
 import com.teamrocket.tms.utils.enums.Role;
 import lombok.extern.slf4j.Slf4j;
@@ -85,13 +86,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUserRole(Long userId, UserDTO userDTO, Long targetUserId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
-        log.info("User with the id {} retrieved. From updateUserRole.", userId);
-
-        User targetUser = userRepository.findById(targetUserId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found."));
-        log.info("User with the id {} retrieved. From updateUserRole.", userId);
+        User user = userServiceValidation.getValidUser(userId, "updateUserRole");
+        User targetUser = userServiceValidation.getValidUser(targetUserId, "updateUserRole");
 
         if (user.getRole().getId() <= targetUser.getRole().getId()) {
             throw new UserUnauthorizedActionException("Based on user role, the action cannot be performed.");
@@ -104,7 +100,6 @@ public class UserServiceImpl implements UserService {
         }
 
         targetUser.setRole(role);
-
         User savedUser = userRepository.save(targetUser);
         log.info("User {} : {} inserted in db.", savedUser.getId(), savedUser.getLastName());
 
@@ -154,18 +149,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TeamDTO assignTeamLeader(Long userId, Long teamId, Long targetUserId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-        log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
+        User user = userServiceValidation.getValidUser(userId, "assignTeamLeader");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
-        User targetUser = userRepository.findById(targetUserId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + targetUserId + " not found."));
-        log.info("User {} : {} retrieved. From assignTeamLeader.", userId, user.getLastName());
-
+        User targetUser = userServiceValidation.getValidUser(targetUserId, "assignTeamLeader");
         userServiceValidation.validateAreUsersEquals(user, targetUser);
-        teamService.validateTeamAlreadyHasTeamLeader(teamId);
         userServiceValidation.validateUserRoleCanPerformAction(targetUser, Role.SENIOR);
+
+        teamService.validateTeamAlreadyHasTeamLeader(teamId);
 
         targetUser.setRole(Role.TEAM_LEADER);
         targetUser.setTeam(modelMapper.map(teamService.getTeamById(teamId), Team.class));
@@ -197,17 +188,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId) {
-        User userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
-
+        User userEntity = userServiceValidation.getValidUser(userId, "assignUserToTeam");
         userServiceValidation.validateUserRoleCanPerformAction(userEntity, Role.PROJECT_MANAGER, Role.TEAM_LEADER);
 
-        TeamDTO teamDTO = teamService.getTeamById(teamId);
         UserDTO targetUserDTO = getUserById(targetUserId);
-
         userServiceValidation.validateUserAlreadyInATeam(targetUserDTO);
-
-        Team teamEntity = modelMapper.map(teamDTO, Team.class);
         User targetUserEntity = modelMapper.map(targetUserDTO, User.class);
+
+        TeamDTO teamDTO = teamService.getTeamById(teamId);
+        Team teamEntity = modelMapper.map(teamDTO, Team.class);
 
         targetUserEntity.setTeam(teamEntity);
         User savedUser = userRepository.save(targetUserEntity);
@@ -217,9 +206,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TaskDTO> getAllTasksForUser(Long userId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        userServiceValidation.getValidUser(userId, "getAllTasksForUser");
         log.info("User with the id {} retrieved.",userId);
+
         return taskService.getAllTasksForUser(userId);
     }
 
