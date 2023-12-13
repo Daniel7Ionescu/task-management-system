@@ -2,6 +2,7 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
+import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserAlreadyInATeamException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import com.teamrocket.tms.models.dtos.UserDTO;
@@ -19,7 +20,9 @@ public class UserServiceValidationImpl implements UserServiceValidation {
 
     private final UserRepository userRepository;
 
-    public UserServiceValidationImpl(UserRepository userRepository) { this.userRepository = userRepository; }
+    public UserServiceValidationImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void validateUserAlreadyExists(UserDTO userDTO) {
@@ -50,5 +53,14 @@ public class UserServiceValidationImpl implements UserServiceValidation {
         if (user.equals(secondUser)) {
             throw new UsersAreEqualsException("Users are the same.");
         }
+    }
+
+    @Override
+    public User getValidUser(Long userId, String methodName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved. method: {}", userId, methodName);
+
+        return user;
     }
 }
