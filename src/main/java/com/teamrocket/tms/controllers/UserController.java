@@ -71,6 +71,12 @@ public class UserController {
         return ResponseEntity.ok(userService.createTeam(userId, teamDTO));
     }
 
+    @GetMapping("/{userId}/tasks")
+    public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@PathVariable Long userId) {
+        List<TaskDTO> tasks = userService.getAllTasksForUser(userId);
+        return  ResponseEntity.ok(userService.getAllTasksForUser(userId));
+    }
+
     @PostMapping("/{userId}/teams/{teamId}/{targetUserId}")
     public ResponseEntity<TeamDTO> assignTeamLeader(@PathVariable Long userId, @PathVariable Long teamId, @PathVariable Long targetUserId) {
         return ResponseEntity.ok(userService.assignTeamLeader(userId, teamId, targetUserId));

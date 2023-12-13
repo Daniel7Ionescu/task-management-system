@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -62,6 +63,14 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
+    @Override
+    public List<TaskDTO> getAllTasksForUser(Long userId) {
+        List<Task> tasks = taskRepository.findByUserId(userId);
+        return tasks.stream()
+                .map(task -> modelMapper.map(task,TaskDTO.class))
+                .collect(Collectors.toList());
+    }
+  
     @Override
     public void validateTaskCanBeAssigned(Task task) {
         taskServiceValidation.validateTaskCanBeAssigned(task);

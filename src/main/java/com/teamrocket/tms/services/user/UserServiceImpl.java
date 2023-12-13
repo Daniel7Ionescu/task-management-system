@@ -216,6 +216,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<TaskDTO> getAllTasksForUser(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with the id " + userId + " not found."));
+        log.info("User with the id {} retrieved.",userId);
+        return taskService.getAllTasksForUser(userId);
+    }
+
+    @Override
     public void deleteProject(Long userId, Long id) {
         ProjectDTO projectDTO = projectService.getProjectById(id);
         if (projectDTO == null) {
@@ -228,6 +236,4 @@ public class UserServiceImpl implements UserService {
         projectService.deleteProject(id);
         log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
-
-
 }
