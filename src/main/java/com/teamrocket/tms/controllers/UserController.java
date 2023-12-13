@@ -47,22 +47,22 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/tasks")
-    public ResponseEntity<TaskDTO> createTask( @Valid @RequestBody TaskDTO taskDTO, @PathVariable Long userId) {
+    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO, @PathVariable Long userId) {
         return ResponseEntity.ok(userService.createTask(taskDTO, userId));
     }
 
     @PutMapping("/{userId}/tasks/{taskId}/{targetUserId}")
-    public ResponseEntity<UserDTO> assignTask(@PathVariable Long userId, @PathVariable Long taskId, @PathVariable Long targetUserId){
+    public ResponseEntity<UserDTO> assignTask(@PathVariable Long userId, @PathVariable Long taskId, @PathVariable Long targetUserId) {
         return ResponseEntity.ok(userService.assignTask(userId, taskId, targetUserId));
     }
 
     @GetMapping("{userId}/tasks/{taskId}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long userId, @PathVariable Long taskId){
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long userId, @PathVariable Long taskId) {
         return ResponseEntity.ok(userService.getTaskById(userId, taskId));
     }
 
     @PostMapping("/{userId}/projects")
-    public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO){
+    public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO) {
         return ResponseEntity.ok(userService.createProject(userId, projectDTO));
     }
 
@@ -74,7 +74,7 @@ public class UserController {
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@PathVariable Long userId) {
         List<TaskDTO> tasks = userService.getAllTasksForUser(userId);
-        return  ResponseEntity.ok(userService.getAllTasksForUser(userId));
+        return ResponseEntity.ok(userService.getAllTasksForUser(userId));
     }
 
     @PostMapping("/{userId}/teams/{teamId}/{targetUserId}")
