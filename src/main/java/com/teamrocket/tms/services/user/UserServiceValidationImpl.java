@@ -1,10 +1,6 @@
 package com.teamrocket.tms.services.user;
 
-import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
-import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
-import com.teamrocket.tms.exceptions.user.UserNotFoundException;
-import com.teamrocket.tms.exceptions.user.UserAlreadyInATeamException;
-import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
+import com.teamrocket.tms.exceptions.user.*;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
@@ -52,6 +48,13 @@ public class UserServiceValidationImpl implements UserServiceValidation {
     public void validateAreUsersEquals(User user, User secondUser) {
         if (user.equals(secondUser)) {
             throw new UsersAreEqualsException("Users are the same.");
+        }
+    }
+
+    @Override
+    public void validateUserNotInATeam(UserDTO userDTO) {
+        if (userDTO.getTeam() == null) {
+            throw new UserNotInATeamException(userDTO.getFirstName() + " is not in a team. Cannot create task.");
         }
     }
 

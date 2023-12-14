@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.dtos;
 
+import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.utils.enums.Priority;
 import com.teamrocket.tms.utils.enums.Status;
@@ -42,6 +43,8 @@ public class TaskDTO {
     private String reviewedBy;
 
     private User user;
+
+    private Project project;
 
     private Map<String, String> comments = new HashMap<>();
 

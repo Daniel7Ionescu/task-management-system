@@ -2,9 +2,11 @@ package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
+import com.teamrocket.tms.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, String userName) {
+    public TaskDTO createTask(TaskDTO taskDTO, UserDTO userDTO) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
+        taskDTO.setCreatedBy(userDTO.getFirstName() + " " + userDTO.getLastName());
+        taskDTO.setProject(userDTO.getTeam().getProject());
+        taskDTO.setStatus(Status.TO_DO);
+
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
-        taskEntity.setCreatedBy(userName);
 
         Task savedTaskEntity = taskRepository.save(taskEntity);
         log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
