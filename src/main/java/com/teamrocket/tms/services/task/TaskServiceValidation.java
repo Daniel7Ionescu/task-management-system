@@ -7,4 +7,6 @@ public interface TaskServiceValidation {
 
     void validateTaskAlreadyExists(TaskDTO taskDTO);
     void validateTaskCanBeAssigned(Task task);
+
+    void validateUserCanCompleteTaskObjectives(Long userId, Long userIdFromTask);
 }

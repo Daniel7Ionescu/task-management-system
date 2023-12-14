@@ -137,8 +137,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TaskDTO updateTask(Long taskId, TaskDTO taskDTO) {
-        return taskService.updateTask(taskId, taskDTO);
+    public TaskDTO userCompleteTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO) {
+        return taskService.completeTaskObjectives(userId, taskId, taskDTO);
     }
 
     @Override

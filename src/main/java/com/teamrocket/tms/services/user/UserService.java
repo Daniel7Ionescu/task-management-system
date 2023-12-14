@@ -40,5 +40,5 @@ public interface UserService {
 
     void deleteProject(Long userId, Long id);
 
-    TaskDTO updateTask(Long taskId, TaskDTO taskDTO);
+    TaskDTO userCompleteTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO);
 }

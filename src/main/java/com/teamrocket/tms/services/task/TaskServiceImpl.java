@@ -67,15 +67,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO updateTask(Long taskId, TaskDTO taskDTO) {
+    public TaskDTO completeTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
         log.info("Task with the id {} retrieved.", taskId);
 
+        taskServiceValidation.validateUserCanCompleteTaskObjectives(userId, task.getUser().getId());
+
         task.setObjectives(taskDTO.getObjectives());
         task.setProgress(getPercentageComplete(task.getObjectives()));
         task.setComplete(checkCompleteBasedOnProgress(task.getProgress()));
-        task.setStatus(setStatusBasedOnProgress((int) task.getProgress()));
+        task.setStatus(setTaskStatusBasedOnProgress((int) task.getProgress()));
 
         if (task.isComplete()) {
             task.setCompletedBy(task.getUser().getFirstName()
@@ -116,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
         return modelMapper.map(savedTask, TaskDTO.class);
     }
 
-    private Status setStatusBasedOnProgress(int value) {
+    private Status setTaskStatusBasedOnProgress(int value) {
         switch (value) {
             case 0:
                 return Status.TO_DO;
