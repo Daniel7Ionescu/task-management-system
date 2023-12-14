@@ -137,6 +137,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TaskDTO updateTask(Long taskId, TaskDTO taskDTO) {
+        return taskService.updateTask(taskId, taskDTO);
+    }
+
+    @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
         User user = userServiceValidation.getValidUser(userId, "createProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
