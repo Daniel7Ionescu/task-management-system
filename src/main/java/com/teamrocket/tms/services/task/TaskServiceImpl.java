@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.teamrocket.tms.utils.calculators.CompletionCalculator.*;
+
 @Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -111,18 +113,38 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTask(Task task) {
-        return taskRepository.save(task);
+    public TaskDTO completeTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
+        log.info("Task with the id {} retrieved.", taskId);
+
+        taskServiceValidation.validateUserCanCompleteTaskObjectives(userId, task.getUser().getId());
+
+        task.setObjectives(taskDTO.getObjectives());
+        task.setProgress(getPercentageComplete(task.getObjectives()));
+        task.setComplete(checkCompleteBasedOnProgress(task.getProgress()));
+        task.setStatus(setTaskStatusBasedOnProgress((int) task.getProgress()));
+
+        if (task.isComplete()) {
+            task.setCompletedBy(task.getUser().getFirstName()
+                    + " " + task.getUser().getLastName()
+                    + " user ID: " + task.getUser().getId());
+        } else {
+            task.setCompletedBy(null);
+        }
+        Task savedTask = taskRepository.save(task);
+
+        return modelMapper.map(savedTask, TaskDTO.class);
     }
 
     @Override
     public List<TaskDTO> getAllTasksForUser(Long userId) {
         List<Task> tasks = taskRepository.findByUserId(userId);
         return tasks.stream()
-                .map(task -> modelMapper.map(task,TaskDTO.class))
+                .map(task -> modelMapper.map(task, TaskDTO.class))
                 .collect(Collectors.toList());
     }
-  
+
     @Override
     public void validateTaskCanBeAssigned(Task task) {
         taskServiceValidation.validateTaskCanBeAssigned(task);
@@ -140,5 +162,16 @@ public class TaskServiceImpl implements TaskService {
         Task savedTask = taskRepository.save(task);
 
         return modelMapper.map(savedTask, TaskDTO.class);
+    }
+
+    private Status setTaskStatusBasedOnProgress(int value) {
+        switch (value) {
+            case 0:
+                return Status.TO_DO;
+            case 100:
+                return Status.AWAITING_REVIEW;
+            default:
+                return Status.IN_PROGRESS;
+        }
     }
 }

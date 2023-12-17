@@ -140,6 +140,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TaskDTO userCompleteTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO) {
+        return taskService.completeTaskObjectives(userId, taskId, taskDTO);
+    }
+    
+    @Override
     public List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters){
         User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
         log.info("User with the id {} retrieved.",userId);

@@ -42,4 +42,6 @@ public interface UserService {
     UserDTO assignUserToTeam(Long userId, Long teamId, Long targetUserId);
 
     void deleteProject(Long userId, Long id);
+
+    TaskDTO userCompleteTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO);
 }
