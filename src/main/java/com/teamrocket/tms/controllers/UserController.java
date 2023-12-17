@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @PutMapping("{userId}/tasks/{taskId}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskDTO> completeTaskObjective(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
         return ResponseEntity.ok(userService.userCompleteTaskObjectives(userId, taskId, taskDTO));
     }
 

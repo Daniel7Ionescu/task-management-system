@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CompletionCalculator {
+
+    private static final int TWO_DECIMALS = 2;
     public static double getPercentageComplete(Map itemsMap){
         List<Boolean> valueList = itemsMap.values().stream().toList();
         int completedObjectives = (int)valueList.stream()
@@ -13,7 +15,7 @@ public class CompletionCalculator {
                 .count();
         double result = (double) completedObjectives / itemsMap.size() * 100;
 
-        return roundUp(result, 2);
+        return roundUp(result, TWO_DECIMALS);
     }
 
     public static boolean checkCompleteBasedOnProgress(double progress){
