@@ -36,5 +36,6 @@ public class Project {
     private Team team;
 
     @OneToMany(mappedBy = "project")
+    @JsonManagedReference("project")
     private List<Task> tasks = new ArrayList<>();
 }

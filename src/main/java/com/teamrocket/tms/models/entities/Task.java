@@ -56,6 +56,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @JsonBackReference("project")
     private Project project;
 
     @ElementCollection
