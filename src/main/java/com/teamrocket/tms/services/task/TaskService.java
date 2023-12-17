@@ -1,6 +1,7 @@
 package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.utils.enums.Priority;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public interface TaskService {
 
-    TaskDTO createTask(TaskDTO taskDTO, String userName);
+    TaskDTO createTask(TaskDTO taskDTO, String userName, Project project);
 
     List<TaskDTO> getAllTasks();
 

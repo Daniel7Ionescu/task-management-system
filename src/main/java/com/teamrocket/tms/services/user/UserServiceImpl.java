@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         User userEntity = userServiceValidation.getValidUser(userId, "createTask");
         String userName = userEntity.getFirstName() + " " + userEntity.getLastName();
 
-        return taskService.createTask(taskDTO, userName);
+        return taskService.createTask(taskDTO, userName, userEntity.getTeam().getProject());
     }
 
     @Override
