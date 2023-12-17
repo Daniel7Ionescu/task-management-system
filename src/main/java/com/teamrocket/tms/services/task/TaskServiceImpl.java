@@ -9,8 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,6 +50,44 @@ public class TaskServiceImpl implements TaskService {
         log.info("Task list retrieved.");
 
         return taskDTOList;
+    }
+
+    @Override
+    public List<TaskDTO> getFilteredTasks(Map<String, String> parameters) {
+        List<List<TaskDTO>> resultList = new ArrayList<>();
+
+        for (String key : parameters.keySet()) {
+            if (key.equals("userId")) {
+                resultList.add(taskRepository.findByUserId(Long.valueOf(parameters.get(key))).stream()
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+            if (key.equals("objectives")) {
+                resultList.add(taskRepository.findAll().stream()
+                        .filter(element -> element.getObjectives().size() == Integer.parseInt(parameters.get(key)))
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+            if (key.equals("dueDate")) {
+                resultList.add(taskRepository.findByDueDate(LocalDate.parse(parameters.get(key))).stream()
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+            if (key.equals("priority")) {
+                resultList.add(taskRepository.findAll().stream()
+                        .filter(element -> element.getPriority() != null)
+                        .filter(element -> element.getPriority().getPriorityLabel().equals(parameters.get(key)))
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+        }
+
+        List<TaskDTO> result = new ArrayList<>(resultList.get(0));
+        for (List<TaskDTO> list : resultList) {
+            result.retainAll(list);
+        }
+
+        return result;
     }
 
     @Override
