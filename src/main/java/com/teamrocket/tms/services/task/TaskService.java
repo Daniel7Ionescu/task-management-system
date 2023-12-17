@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface TaskService {
 
-    TaskDTO createTask(TaskDTO taskDTO, String userName, Project project);
+    TaskDTO createTask(TaskDTO taskDTO, UserDTO userDTO, Project project);
 
     List<TaskDTO> getAllTasks();
 
@@ -29,4 +29,6 @@ public interface TaskService {
     TaskDTO assignUserToTask(User userEntity, Long taskId);
 
     void validateTaskCanBeAssigned(Task task);
+
+    TaskDTO userReviewTask(String reviewerName, Long taskId, TaskDTO taskDTO);
 }
