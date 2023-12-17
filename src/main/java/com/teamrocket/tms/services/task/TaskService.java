@@ -17,7 +17,7 @@ public interface TaskService {
 
     List<TaskDTO> getAllTasks();
 
-    List<TaskDTO> getFilteredTasks(Map<String, String> parameters);
+    List<TaskDTO> getFilteredTasks(Map<String, String> parameters, Project project);
 
     TaskDTO getTaskById(Long id);
 

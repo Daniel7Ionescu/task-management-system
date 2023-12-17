@@ -55,28 +55,31 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> getFilteredTasks(Map<String, String> parameters) {
+    public List<TaskDTO> getFilteredTasks(Map<String, String> parameters, Project project) {
         List<List<TaskDTO>> resultList = new ArrayList<>();
 
         for (String key : parameters.keySet()) {
             if (key.equals("userId")) {
                 resultList.add(taskRepository.findByUserId(Long.valueOf(parameters.get(key))).stream()
+                        .filter(element -> element.getProject().equals(project))
                         .map(element -> modelMapper.map(element, TaskDTO.class))
                         .toList());
             }
             if (key.equals("objectives")) {
-                resultList.add(taskRepository.findAll().stream()
+                resultList.add(taskRepository.findByProject(project).stream()
+                        .filter(element -> element.getProject().equals(project))
                         .filter(element -> element.getObjectives().size() == Integer.parseInt(parameters.get(key)))
                         .map(element -> modelMapper.map(element, TaskDTO.class))
                         .toList());
             }
             if (key.equals("dueDate")) {
                 resultList.add(taskRepository.findByDueDate(LocalDate.parse(parameters.get(key))).stream()
+                        .filter(element -> element.getProject().equals(project))
                         .map(element -> modelMapper.map(element, TaskDTO.class))
                         .toList());
             }
             if (key.equals("priority")) {
-                resultList.add(taskRepository.findAll().stream()
+                resultList.add(taskRepository.findByProject(project).stream()
                         .filter(element -> element.getPriority() != null)
                         .filter(element -> element.getPriority().getPriorityLabel().equals(parameters.get(key)))
                         .map(element -> modelMapper.map(element, TaskDTO.class))

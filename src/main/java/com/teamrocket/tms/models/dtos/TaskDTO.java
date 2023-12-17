@@ -1,5 +1,6 @@
 package com.teamrocket.tms.models.dtos;
 
+import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.utils.enums.Priority;
 import com.teamrocket.tms.utils.enums.Status;
@@ -40,6 +41,8 @@ public class TaskDTO {
     private String completedBy;
 
     private String reviewedBy;
+
+    private Project project;
 
     private User user;
 

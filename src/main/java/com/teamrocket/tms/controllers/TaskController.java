@@ -32,10 +32,10 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
 
-    @GetMapping("/filtered")
-    public ResponseEntity<List<TaskDTO>> getFilteredTasks(@RequestParam Map<String, String> parameters) {
-        return ResponseEntity.ok(taskService.getFilteredTasks(parameters));
-    }
+//    @GetMapping("/filtered")
+//    public ResponseEntity<List<TaskDTO>> getFilteredTasks(@RequestParam Map<String, String> parameters) {
+//        return ResponseEntity.ok(taskService.getFilteredTasks(parameters));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
