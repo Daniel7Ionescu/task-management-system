@@ -113,6 +113,11 @@ public class GlobalExceptionHandler {
         return getResponse(e, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(UserDoesNotHaveATeamException.class)
+    public ResponseEntity<Object> handleUserDoesNotHaveATeamException(UserDoesNotHaveATeamException e) {
+        return getResponse(e, HttpStatus.FORBIDDEN);
+    }
+
     private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {
         Map<String, Object> result = new HashMap<>();
         result.put("message", e.getMessage());

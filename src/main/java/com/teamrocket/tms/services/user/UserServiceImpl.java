@@ -1,6 +1,8 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
+import com.teamrocket.tms.exceptions.user.UserDoesNotHaveATeamException;
+import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TaskDTO;
@@ -141,6 +143,10 @@ public class UserServiceImpl implements UserService {
     public List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters){
         User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
         log.info("User with the id {} retrieved.",userId);
+
+        if (user.getTeam() == null) {
+            throw new UserDoesNotHaveATeamException("User is not part of a Team.");
+        }
 
         return taskService.getFilteredTasks(parameters, user.getTeam().getProject());
     }
