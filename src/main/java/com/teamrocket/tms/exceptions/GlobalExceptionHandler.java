@@ -6,15 +6,11 @@ import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
 import com.teamrocket.tms.exceptions.task.TaskIsNotAssignableException;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
-import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
+import com.teamrocket.tms.exceptions.user.*;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyHasTeamLeaderException;
 import com.teamrocket.tms.exceptions.team.TeamIsNotAssignableException;
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
-import com.teamrocket.tms.exceptions.user.UserAlreadyExistsException;
-import com.teamrocket.tms.exceptions.user.UserAlreadyInATeamException;
-import com.teamrocket.tms.exceptions.user.UserNotFoundException;
-import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -110,6 +106,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserUnauthorizedActionException.class)
     public ResponseEntity<Object> handleUserUnauthorizedActionException(UserUnauthorizedActionException e){
         return getResponse(e, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserDoesNotHaveATeamException.class)
+    public ResponseEntity<Object> handleUserDoesNotHaveATeamException(UserDoesNotHaveATeamException e) {
+        return getResponse(e, HttpStatus.FORBIDDEN);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {
