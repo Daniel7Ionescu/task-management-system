@@ -4,6 +4,7 @@ import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserDoesNotHaveATeamException;
 import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
+import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = modelMapper.map(userEntity, UserDTO.class);
         userServiceValidation.validateUserNotInATeam(userDTO);
 
-        return taskService.createTask(taskDTO, userName, userEntity.getTeam().getProject());
+        return taskService.createTask(taskDTO, userDTO, userEntity.getTeam().getProject());
     }
 
     @Override
@@ -149,11 +150,23 @@ public class UserServiceImpl implements UserService {
         User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
         log.info("User with the id {} retrieved.",userId);
 
+        if(parameters.isEmpty()){
+            return taskService.getAllTasks();
+        }
+
         if (user.getTeam() == null) {
             throw new UserDoesNotHaveATeamException("User is not part of a Team.");
         }
 
         return taskService.getFilteredTasks(parameters, user.getTeam().getProject());
+    }
+
+    @Override
+    public TaskDTO reviewTask(Long userId, Long taskId, TaskDTO taskDTO) {
+        User user = userServiceValidation.getValidUser(userId, "reviewTask");
+        String reviewerName = user.getFirstName() + " " + user.getLastName();
+
+        return  taskService.userReviewTask(reviewerName, taskId, taskDTO);
     }
 
     @Override

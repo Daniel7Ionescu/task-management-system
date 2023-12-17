@@ -1,6 +1,8 @@
 package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
+import com.teamrocket.tms.exceptions.task.TaskStatusIsNotValidForAction;
+import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.dtos.UserDTO;
@@ -35,7 +37,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, String userName, Project project) {
+    public TaskDTO createTask(TaskDTO taskDTO, UserDTO userDTO, Project project) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
         taskDTO.setCreatedBy(userDTO.getFirstName() + " " + userDTO.getLastName());
@@ -43,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
         taskDTO.setStatus(Status.TO_DO);
 
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
-        taskEntity.setCreatedBy(userName);
+        taskEntity.setCreatedBy(userDTO.getFirstName() + " " + userDTO.getLastName());
         taskEntity.setProject(project);
 
         Task savedTaskEntity = taskRepository.save(taskEntity);
@@ -126,9 +128,7 @@ public class TaskServiceImpl implements TaskService {
         task.setStatus(setTaskStatusBasedOnProgress((int) task.getProgress()));
 
         if (task.isComplete()) {
-            task.setCompletedBy(task.getUser().getFirstName()
-                    + " " + task.getUser().getLastName()
-                    + " user ID: " + task.getUser().getId());
+            task.setCompletedBy(task.getUser().getFirstName() + " " + task.getUser().getLastName());
         } else {
             task.setCompletedBy(null);
         }
@@ -143,6 +143,30 @@ public class TaskServiceImpl implements TaskService {
         return tasks.stream()
                 .map(task -> modelMapper.map(task, TaskDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TaskDTO userReviewTask(String reviewerName, Long taskId, TaskDTO taskDTO) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
+        log.info("Task with the id {} retrieved.", taskId);
+
+        if (!task.getStatus().equals(Status.AWAITING_REVIEW)) {
+            throw new TaskStatusIsNotValidForAction("Task cannot be reviewed at this time.");
+        }
+
+        if (reviewerName.equals(task.getCompletedBy())){
+            throw new UsersAreEqualsException("You cannot review your own work!");
+        }
+
+        task.setStatus(taskDTO.getStatus());
+        task.setReviewedBy(reviewerName);
+
+        Task savedTask = taskRepository.save(task);
+
+        //update project percentage complete
+
+        return modelMapper.map(savedTask, TaskDTO.class);
     }
 
     @Override

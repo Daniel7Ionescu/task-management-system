@@ -78,6 +78,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllTasksForUser(userId));
     }
 
+    @PutMapping("/{userId}/tasks/review/{taskId}")
+    public ResponseEntity<TaskDTO> reviewTask(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
+        return ResponseEntity.ok(userService.reviewTask(userId, taskId, taskDTO));
+    }
+
     @PostMapping("/{userId}/projects")
     public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO) {
         return ResponseEntity.ok(userService.createProject(userId, projectDTO));

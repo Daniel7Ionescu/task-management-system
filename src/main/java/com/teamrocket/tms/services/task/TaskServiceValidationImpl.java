@@ -2,7 +2,7 @@ package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.exceptions.task.InvalidUserCompletesTaskObjective;
 import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
-import com.teamrocket.tms.exceptions.task.TaskIsNotAssignableException;
+import com.teamrocket.tms.exceptions.task.TaskStatusIsNotValidForAction;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.repositories.TaskRepository;
@@ -29,7 +29,7 @@ public class TaskServiceValidationImpl implements TaskServiceValidation {
     @Override
     public void validateTaskCanBeAssigned(Task task) {
         if(task.isComplete() == true || task.getUser() != null){
-            throw new TaskIsNotAssignableException("Task : " + task.getId() + " : " + task.getTitle() + " not available / cannot be assigned");
+            throw new TaskStatusIsNotValidForAction("Task : " + task.getId() + " : " + task.getTitle() + " not available / cannot be assigned");
         }
     }
 

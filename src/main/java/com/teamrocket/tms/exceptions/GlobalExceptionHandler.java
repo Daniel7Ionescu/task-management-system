@@ -5,7 +5,7 @@ import com.teamrocket.tms.exceptions.project.ProjectIsNotAssignableException;
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.task.InvalidUserCompletesTaskObjective;
 import com.teamrocket.tms.exceptions.task.TaskAlreadyExistsException;
-import com.teamrocket.tms.exceptions.task.TaskIsNotAssignableException;
+import com.teamrocket.tms.exceptions.task.TaskStatusIsNotValidForAction;
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.exceptions.user.*;
 import com.teamrocket.tms.exceptions.team.TeamAlreadyExistsException;
@@ -59,8 +59,8 @@ public class GlobalExceptionHandler {
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(TaskIsNotAssignableException.class)
-    public ResponseEntity<Object> handleTaskIsNotAssignableException(TaskIsNotAssignableException e){
+    @ExceptionHandler(TaskStatusIsNotValidForAction.class)
+    public ResponseEntity<Object> handleTaskIsNotAssignableException(TaskStatusIsNotValidForAction e){
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
