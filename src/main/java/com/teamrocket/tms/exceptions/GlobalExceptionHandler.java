@@ -103,6 +103,11 @@ public class GlobalExceptionHandler {
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(UserNotInATeamException.class)
+    public ResponseEntity<Object> handleUserNotInATeamException(UserNotInATeamException e) {
+        return getResponse(e, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(UserUnauthorizedActionException.class)
     public ResponseEntity<Object> handleUserUnauthorizedActionException(UserUnauthorizedActionException e){
         return getResponse(e, HttpStatus.UNAUTHORIZED);
