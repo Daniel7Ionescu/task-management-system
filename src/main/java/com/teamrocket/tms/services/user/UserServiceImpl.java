@@ -1,6 +1,8 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
+import com.teamrocket.tms.exceptions.user.UserDoesNotHaveATeamException;
+import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TaskDTO;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -116,7 +119,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = modelMapper.map(userEntity, UserDTO.class);
         userServiceValidation.validateUserNotInATeam(userDTO);
 
-        return taskService.createTask(taskDTO, userDTO);
+        return taskService.createTask(taskDTO, userName, userEntity.getTeam().getProject());
     }
 
     @Override
@@ -139,6 +142,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public TaskDTO userCompleteTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO) {
         return taskService.completeTaskObjectives(userId, taskId, taskDTO);
+    }
+    
+    @Override
+    public List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters){
+        User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
+        log.info("User with the id {} retrieved.",userId);
+
+        if (user.getTeam() == null) {
+            throw new UserDoesNotHaveATeamException("User is not part of a Team.");
+        }
+
+        return taskService.getFilteredTasks(parameters, user.getTeam().getProject());
     }
 
     @Override

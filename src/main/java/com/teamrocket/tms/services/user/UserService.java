@@ -7,6 +7,7 @@ import com.teamrocket.tms.models.dtos.TeamDTO;
 import com.teamrocket.tms.models.dtos.UserDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -25,6 +26,8 @@ public interface UserService {
     TaskDTO getTaskById(Long userId, Long taskId);
 
     UserDTO assignTask(Long userId, Long taskId, Long targetUserId);
+
+    List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters);
 
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
 

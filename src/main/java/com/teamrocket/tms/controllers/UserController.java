@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -65,6 +66,17 @@ public class UserController {
     public ResponseEntity<TaskDTO> completeTaskObjective(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
         return ResponseEntity.ok(userService.userCompleteTaskObjectives(userId, taskId, taskDTO));
     }
+  
+    @GetMapping("/{userId}/tasks/filtered")
+    public ResponseEntity<List<TaskDTO>> getFilteredTasks(@PathVariable Long userId, @RequestParam Map<String, String> parameters) {
+        return ResponseEntity.ok(userService.getFilteredTasks(userId, parameters));
+    }
+
+    @GetMapping("/{userId}/tasks")
+    public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@PathVariable Long userId) {
+        List<TaskDTO> tasks = userService.getAllTasksForUser(userId);
+        return ResponseEntity.ok(userService.getAllTasksForUser(userId));
+    }
 
     @PostMapping("/{userId}/projects")
     public ResponseEntity<ProjectDTO> createProject(@PathVariable Long userId, @Valid @RequestBody ProjectDTO projectDTO) {
@@ -74,12 +86,6 @@ public class UserController {
     @PostMapping("/{userId}/teams")
     public ResponseEntity<TeamDTO> createTeam(@PathVariable Long userId, @Valid @RequestBody TeamDTO teamDTO) {
         return ResponseEntity.ok(userService.createTeam(userId, teamDTO));
-    }
-
-    @GetMapping("/{userId}/tasks")
-    public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@PathVariable Long userId) {
-        List<TaskDTO> tasks = userService.getAllTasksForUser(userId);
-        return ResponseEntity.ok(userService.getAllTasksForUser(userId));
     }
 
     @PostMapping("/{userId}/teams/{teamId}/{targetUserId}")
