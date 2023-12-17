@@ -1,10 +1,14 @@
 package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
-import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
-import com.teamrocket.tms.models.dtos.*;
-import com.teamrocket.tms.models.entities.*;
+import com.teamrocket.tms.models.dtos.ProjectDTO;
+import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.dtos.TeamDTO;
+import com.teamrocket.tms.models.dtos.UserDTO;
+import com.teamrocket.tms.models.entities.Project;
+import com.teamrocket.tms.models.entities.Team;
+import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.UserRepository;
 import com.teamrocket.tms.services.project.ProjectService;
 import com.teamrocket.tms.services.task.TaskService;
@@ -110,7 +114,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public TaskDTO createTask(TaskDTO taskDTO, Long userId) {
         User userEntity = userServiceValidation.getValidUser(userId, "createTask");
-        String userName = userEntity.getFirstName() + " " + userEntity.getLastName();
+        UserDTO userDTO = modelMapper.map(userEntity, UserDTO.class);
+        userServiceValidation.validateUserNotInATeam(userDTO);
 
         return taskService.createTask(taskDTO, userName, userEntity.getTeam().getProject());
     }

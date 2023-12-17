@@ -46,6 +46,8 @@ public class TaskDTO {
 
     private User user;
 
+    private Project project;
+
     private Map<String, String> comments = new HashMap<>();
 
     @NotEmpty

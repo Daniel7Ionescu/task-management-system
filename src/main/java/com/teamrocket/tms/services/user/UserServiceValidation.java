@@ -13,6 +13,8 @@ public interface UserServiceValidation {
     void validateUserRoleCanPerformAction(User user, Role...validRoles);
   
     User getValidUser(Long userId, String methodName);
+
+    void validateUserNotInATeam(UserDTO userDTO);
   
     void validateAreUsersEquals(User user, User secondUser);
 }

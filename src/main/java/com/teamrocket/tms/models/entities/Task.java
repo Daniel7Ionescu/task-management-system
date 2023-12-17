@@ -56,7 +56,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @JsonBackReference("project")
+    @JsonBackReference(value = "projectReference")
     private Project project;
 
     @ElementCollection
