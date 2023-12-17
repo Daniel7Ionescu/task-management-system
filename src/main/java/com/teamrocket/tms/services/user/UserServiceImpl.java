@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = modelMapper.map(userEntity, UserDTO.class);
         userServiceValidation.validateUserNotInATeam(userDTO);
 
-        return taskService.createTask(taskDTO, userDTO);
+        return taskService.createTask(taskDTO, userName, userEntity.getTeam().getProject());
     }
 
     @Override
@@ -134,6 +135,14 @@ public class UserServiceImpl implements UserService {
         taskService.assignUserToTask(targetUser, taskId);
 
         return modelMapper.map(targetUser, UserDTO.class);
+    }
+
+    @Override
+    public List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters){
+        User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
+        log.info("User with the id {} retrieved.",userId);
+
+        return taskService.getFilteredTasks(parameters, user.getTeam().getProject());
     }
 
     @Override

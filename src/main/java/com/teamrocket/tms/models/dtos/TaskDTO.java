@@ -42,6 +42,8 @@ public class TaskDTO {
 
     private String reviewedBy;
 
+    private Project project;
+
     private User user;
 
     private Project project;

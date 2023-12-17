@@ -2,6 +2,7 @@ package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
@@ -11,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, UserDTO userDTO) {
+    public TaskDTO createTask(TaskDTO taskDTO, String userName, Project project) {
         taskServiceValidation.validateTaskAlreadyExists(taskDTO);
 
         taskDTO.setCreatedBy(userDTO.getFirstName() + " " + userDTO.getLastName());
@@ -38,6 +41,8 @@ public class TaskServiceImpl implements TaskService {
         taskDTO.setStatus(Status.TO_DO);
 
         Task taskEntity = modelMapper.map(taskDTO, Task.class);
+        taskEntity.setCreatedBy(userName);
+        taskEntity.setProject(project);
 
         Task savedTaskEntity = taskRepository.save(taskEntity);
         log.info("Task {} : {} inserted in db.", savedTaskEntity.getId(), taskEntity.getTitle());
@@ -53,6 +58,47 @@ public class TaskServiceImpl implements TaskService {
         log.info("Task list retrieved.");
 
         return taskDTOList;
+    }
+
+    @Override
+    public List<TaskDTO> getFilteredTasks(Map<String, String> parameters, Project project) {
+        List<List<TaskDTO>> resultList = new ArrayList<>();
+
+        for (String key : parameters.keySet()) {
+            if (key.equals("userId")) {
+                resultList.add(taskRepository.findByUserId(Long.valueOf(parameters.get(key))).stream()
+                        .filter(element -> element.getProject().equals(project))
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+            if (key.equals("objectives")) {
+                resultList.add(taskRepository.findByProject(project).stream()
+                        .filter(element -> element.getProject().equals(project))
+                        .filter(element -> element.getObjectives().size() == Integer.parseInt(parameters.get(key)))
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+            if (key.equals("dueDate")) {
+                resultList.add(taskRepository.findByDueDate(LocalDate.parse(parameters.get(key))).stream()
+                        .filter(element -> element.getProject().equals(project))
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+            if (key.equals("priority")) {
+                resultList.add(taskRepository.findByProject(project).stream()
+                        .filter(element -> element.getPriority() != null)
+                        .filter(element -> element.getPriority().getPriorityLabel().equals(parameters.get(key)))
+                        .map(element -> modelMapper.map(element, TaskDTO.class))
+                        .toList());
+            }
+        }
+
+        List<TaskDTO> result = new ArrayList<>(resultList.get(0));
+        for (List<TaskDTO> list : resultList) {
+            result.retainAll(list);
+        }
+
+        return result;
     }
 
     @Override
