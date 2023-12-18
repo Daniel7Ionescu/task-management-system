@@ -166,10 +166,7 @@ public class TaskServiceImpl implements TaskService {
 
         task.setStatus(taskDTO.getStatus());
         task.setReviewedBy(reviewerName);
-
         Task savedTask = taskRepository.save(task);
-
-        //update project percentage complete
         projectService.updateProjectPercentageComplete(savedTask.getProject());
 
         return modelMapper.map(savedTask, TaskDTO.class);
