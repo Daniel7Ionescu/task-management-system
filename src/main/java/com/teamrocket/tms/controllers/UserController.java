@@ -77,9 +77,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllTasksForUser(userId));
     }
 
-    @PutMapping("/{userId}/tasks/review/{taskId}")
+    @PutMapping("/{userId}/tasks/{taskId}/review")
     public ResponseEntity<TaskDTO> reviewTask(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(userService.reviewTask(userId, taskId, taskDTO));
+    }
+
+    @PostMapping("/{userId}/tasks/{taskId}/comments")
+    public ResponseEntity<TaskDTO> addCommentToTask(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody String comment) {
+        return ResponseEntity.ok(userService.addCommentToTask(userId, taskId, comment));
     }
 
     @PostMapping("/{userId}/projects")
