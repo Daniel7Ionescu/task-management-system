@@ -154,7 +154,7 @@ public class TaskServiceImpl implements TaskService {
             throw new TaskStatusIsNotValidForAction("Task cannot be reviewed at this time.");
         }
 
-        if (reviewerName.equals(task.getCompletedBy())){
+        if (reviewerName.equals(task.getCompletedBy())) {
             throw new UsersAreEqualsException("You cannot review your own work!");
         }
 

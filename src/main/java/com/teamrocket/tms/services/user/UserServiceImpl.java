@@ -142,13 +142,13 @@ public class UserServiceImpl implements UserService {
     public TaskDTO userCompleteTaskObjectives(Long userId, Long taskId, TaskDTO taskDTO) {
         return taskService.completeTaskObjectives(userId, taskId, taskDTO);
     }
-    
-    @Override
-    public List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters){
-        User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
-        log.info("User with the id {} retrieved.",userId);
 
-        if(parameters.isEmpty()){
+    @Override
+    public List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters) {
+        User user = userServiceValidation.getValidUser(userId, "getAllTasksForUser");
+        log.info("User with the id {} retrieved.", userId);
+
+        if (parameters.isEmpty()) {
             return taskService.getAllTasks();
         }
 
@@ -164,13 +164,13 @@ public class UserServiceImpl implements UserService {
         User user = userServiceValidation.getValidUser(userId, "reviewTask");
         String reviewerName = user.getFirstName() + " " + user.getLastName();
 
-        return  taskService.userReviewTask(reviewerName, taskId, taskDTO);
+        return taskService.userReviewTask(reviewerName, taskId, taskDTO);
     }
 
     @Override
-    public List<TaskDTO> getAllTasksForUser(Long userId){
+    public List<TaskDTO> getAllTasksForUser(Long userId) {
         userServiceValidation.getValidUser(userId, "getAllTasksForUser");
-        log.info("User with the id {} retrieved.",userId);
+        log.info("User with the id {} retrieved.", userId);
 
         return taskService.getAllTasksForUser(userId);
     }

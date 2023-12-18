@@ -18,12 +18,12 @@ public class TeamController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TeamDTO>> getAllTeams(){
+    public ResponseEntity<List<TeamDTO>> getAllTeams() {
         return ResponseEntity.ok(teamService.getAllTeams());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeamDTO> getTeamById(@PathVariable Long id){
+    public ResponseEntity<TeamDTO> getTeamById(@PathVariable Long id) {
         return ResponseEntity.ok(teamService.getTeamById(id));
     }
 }

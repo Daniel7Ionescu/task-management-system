@@ -33,7 +33,7 @@ public class TeamServiceValidationImpl implements TeamServiceValidation {
         }
     }
 
-        @Override
+    @Override
     public void validateTeamIsAssignable(TeamDTO teamDTO) {
         if (teamDTO.getProject() != null) {
             throw new TeamIsNotAssignableException("Team: " + teamDTO.getId() + " : " + teamDTO.getName() + " not available / cannot be assigned.");

@@ -20,8 +20,8 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getProjectById(@PathVariable Long id) {
         ProjectDTO projectDTO = projectService.getProjectById(id);
-            return ResponseEntity.ok(projectDTO);
-        }
+        return ResponseEntity.ok(projectDTO);
+    }
 
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {

@@ -63,10 +63,10 @@ public class UserController {
     }
 
     @PutMapping("{userId}/tasks/{taskId}")
-    public ResponseEntity<TaskDTO> completeTaskObjective(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskDTO> completeTaskObjective(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(userService.userCompleteTaskObjectives(userId, taskId, taskDTO));
     }
-  
+
     @GetMapping("/{userId}/tasks/filtered")
     public ResponseEntity<List<TaskDTO>> getFilteredTasks(@PathVariable Long userId, @RequestParam Map<String, String> parameters) {
         return ResponseEntity.ok(userService.getFilteredTasks(userId, parameters));
@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/tasks/review/{taskId}")
-    public ResponseEntity<TaskDTO> reviewTask(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskDTO> reviewTask(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(userService.reviewTask(userId, taskId, taskDTO));
     }
 

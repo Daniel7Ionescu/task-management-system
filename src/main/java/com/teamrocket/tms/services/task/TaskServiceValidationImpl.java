@@ -28,14 +28,14 @@ public class TaskServiceValidationImpl implements TaskServiceValidation {
 
     @Override
     public void validateTaskCanBeAssigned(Task task) {
-        if(task.isComplete() || task.getUser() != null){
+        if (task.isComplete() || task.getUser() != null) {
             throw new TaskStatusIsNotValidForAction("Task : " + task.getId() + " : " + task.getTitle() + " not available / cannot be assigned");
         }
     }
 
     @Override
     public void validateUserCanCompleteTaskObjectives(Long userId, Long userIdFromTask) {
-        if(userId != userIdFromTask) {
+        if (userId != userIdFromTask) {
             throw new InvalidUserCompletesTaskObjective("You are not assign to this task and cannot complete its objectives!");
         }
     }
