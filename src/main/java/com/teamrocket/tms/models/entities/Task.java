@@ -38,7 +38,7 @@ public class Task {
     private double progress;
 
     @Column(name = "is_complete")
-    private boolean isComplete;
+    private boolean isObjectiveMapComplete;
 
     @Column(name = "due_date")
     private LocalDate dueDate;

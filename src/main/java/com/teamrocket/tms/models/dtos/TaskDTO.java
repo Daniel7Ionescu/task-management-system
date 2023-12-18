@@ -34,7 +34,7 @@ public class TaskDTO {
 
     private double progress;
 
-    private boolean isComplete;
+    private boolean isObjectiveMapComplete;
 
     private LocalDate dueDate;
 
@@ -42,12 +42,12 @@ public class TaskDTO {
 
     private String reviewedBy;
 
-    private Project project;
-
-    private User user;
-
     private Map<String, String> comments = new HashMap<>();
 
     @NotEmpty
     private Map<String, Boolean> objectives = new HashMap<>();
+
+    private Project project;
+
+    private User user;
 }
