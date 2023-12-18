@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.teamrocket.tms.utils.calculators.CompletionCalculator.*;
 
@@ -142,7 +141,7 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = taskRepository.findByUserId(userId);
         return tasks.stream()
                 .map(task -> modelMapper.map(task, TaskDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -155,7 +154,7 @@ public class TaskServiceImpl implements TaskService {
             throw new TaskStatusIsNotValidForAction("Task cannot be reviewed at this time.");
         }
 
-        if (reviewerName.equals(task.getCompletedBy())){
+        if (reviewerName.equals(task.getCompletedBy())) {
             throw new UsersAreEqualsException("You cannot review your own work!");
         }
 

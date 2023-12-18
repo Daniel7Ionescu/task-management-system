@@ -37,8 +37,8 @@ public class UserServiceValidationImpl implements UserServiceValidation {
     }
 
     @Override
-    public void validateUserRoleCanPerformAction(User user, Role...validRoles){
-        if(Arrays.stream(validRoles).noneMatch(role -> role == user.getRole())){
+    public void validateUserRoleCanPerformAction(User user, Role... validRoles) {
+        if (Arrays.stream(validRoles).noneMatch(role -> role == user.getRole())) {
             log.info("User {} : {} with role {} tried action not permitted for this role.", user.getId(), user.getLastName(), user.getRole().getRoleLabel());
             throw new UserUnauthorizedActionException("Based on user role, action cannot be completed.");
         }

@@ -60,12 +60,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TaskStatusIsNotValidForAction.class)
-    public ResponseEntity<Object> handleTaskIsNotAssignableException(TaskStatusIsNotValidForAction e){
+    public ResponseEntity<Object> handleTaskIsNotAssignableException(TaskStatusIsNotValidForAction e) {
         return getResponse(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidUserCompletesTaskObjective.class)
-    public ResponseEntity<Object> handleInvalidUserCompletesTaskObjective(InvalidUserCompletesTaskObjective e){
+    public ResponseEntity<Object> handleInvalidUserCompletesTaskObjective(InvalidUserCompletesTaskObjective e) {
         return getResponse(e, HttpStatus.UNAUTHORIZED);
     }
 
@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserUnauthorizedActionException.class)
-    public ResponseEntity<Object> handleUserUnauthorizedActionException(UserUnauthorizedActionException e){
+    public ResponseEntity<Object> handleUserUnauthorizedActionException(UserUnauthorizedActionException e) {
         return getResponse(e, HttpStatus.UNAUTHORIZED);
     }
 

@@ -9,8 +9,8 @@ public enum Role {
     MEDIOR("Medior", 2L),
     SENIOR("Senior", 3L),
     PROJECT_MANAGER("Project Manager", 5L),
-    TEAM_LEADER("Team Leader",4L);
-    
+    TEAM_LEADER("Team Leader", 4L);
+
     private final String roleLabel;
     private final Long id;
 
