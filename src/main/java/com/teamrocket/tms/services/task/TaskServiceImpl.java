@@ -9,6 +9,7 @@ import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
+import com.teamrocket.tms.services.project.ProjectService;
 import com.teamrocket.tms.utils.enums.Status;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +32,13 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final ModelMapper modelMapper;
     private final TaskServiceValidation taskServiceValidation;
+    private final ProjectService projectService;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ModelMapper modelMapper, TaskServiceValidation taskServiceValidation) {
+    public TaskServiceImpl(TaskRepository taskRepository, ModelMapper modelMapper, TaskServiceValidation taskServiceValidation, ProjectService projectService) {
         this.taskRepository = taskRepository;
         this.modelMapper = modelMapper;
         this.taskServiceValidation = taskServiceValidation;
+        this.projectService = projectService;
     }
 
     @Override
@@ -125,11 +128,11 @@ public class TaskServiceImpl implements TaskService {
         taskServiceValidation.validateUserCanCompleteTaskObjectives(userId, task.getUser().getId());
 
         task.setObjectives(taskDTO.getObjectives());
-        task.setProgress(getPercentageComplete(task.getObjectives()));
-        task.setComplete(checkCompleteBasedOnProgress(task.getProgress()));
+        task.setProgress(getTaskPercentageComplete(task.getObjectives()));
+        task.setObjectiveMapComplete(checkCompleteBasedOnProgress(task.getProgress()));
         task.setStatus(setTaskStatusBasedOnProgress((int) task.getProgress()));
 
-        if (task.isComplete()) {
+        if (task.isObjectiveMapComplete()) {
             task.setCompletedBy(task.getUser().getFirstName() + " " + task.getUser().getLastName());
         } else {
             task.setCompletedBy(null);
@@ -163,10 +166,8 @@ public class TaskServiceImpl implements TaskService {
 
         task.setStatus(taskDTO.getStatus());
         task.setReviewedBy(reviewerName);
-
         Task savedTask = taskRepository.save(task);
-
-        //update project percentage complete
+        projectService.updateProjectPercentageComplete(savedTask.getProject());
 
         return modelMapper.map(savedTask, TaskDTO.class);
     }

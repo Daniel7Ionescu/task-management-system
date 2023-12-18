@@ -4,11 +4,14 @@ import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.repositories.ProjectRepository;
+import com.teamrocket.tms.utils.calculators.CompletionCalculator;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.teamrocket.tms.utils.calculators.CompletionCalculator.*;
 
 @Slf4j
 @Service
@@ -60,5 +63,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void validateProjectIsAssignable(ProjectDTO projectDTO) {
         projectServiceValidation.validateProjectIsAssignable(projectDTO);
+    }
+
+    @Override
+    public void updateProjectPercentageComplete(Project project) {
+        project.setPercentageComplete(getProjectPercentageComplete(project.getTasks()));
+
+        Project savedProject = projectRepository.save(project);
+        log.info("Project created successfully with ID: {}", savedProject.getId());
     }
 }

@@ -35,7 +35,7 @@ public class TaskDTO {
 
     private double progress;
 
-    private boolean isComplete;
+    private boolean isObjectiveMapComplete;
 
     private LocalDate dueDate;
 
