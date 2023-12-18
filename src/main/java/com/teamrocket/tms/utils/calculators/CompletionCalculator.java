@@ -8,7 +8,10 @@ import java.util.Map;
 public class CompletionCalculator {
 
     private static final int TWO_DECIMALS = 2;
-    public static double getPercentageComplete(Map itemsMap){
+
+    private CompletionCalculator() {}
+
+    public static double getPercentageComplete(Map<String, Boolean> itemsMap){
         List<Boolean> valueList = itemsMap.values().stream().toList();
         int completedObjectives = (int)valueList.stream()
                 .filter(item -> item)

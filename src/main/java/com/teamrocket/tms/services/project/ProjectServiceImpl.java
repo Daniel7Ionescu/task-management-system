@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,7 +49,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projects.stream()
                 .map(project -> modelMapper.map(project, ProjectDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

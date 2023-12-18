@@ -2,7 +2,6 @@ package com.teamrocket.tms.services.team;
 
 import com.teamrocket.tms.exceptions.team.TeamNotFoundException;
 import com.teamrocket.tms.models.dtos.TeamDTO;
-import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.Team;
 import com.teamrocket.tms.repositories.TeamRepository;
 import lombok.extern.slf4j.Slf4j;

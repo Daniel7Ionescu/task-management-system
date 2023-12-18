@@ -74,7 +74,6 @@ public class UserController {
 
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<List<TaskDTO>> getAllTasksForUser(@PathVariable Long userId) {
-        List<TaskDTO> tasks = userService.getAllTasksForUser(userId);
         return ResponseEntity.ok(userService.getAllTasksForUser(userId));
     }
 

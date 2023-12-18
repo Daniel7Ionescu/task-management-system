@@ -5,10 +5,7 @@ import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
-import com.teamrocket.tms.utils.enums.Priority;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 

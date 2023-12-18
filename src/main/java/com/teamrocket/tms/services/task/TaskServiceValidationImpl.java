@@ -28,7 +28,7 @@ public class TaskServiceValidationImpl implements TaskServiceValidation {
 
     @Override
     public void validateTaskCanBeAssigned(Task task) {
-        if(task.isComplete() == true || task.getUser() != null){
+        if(task.isComplete() || task.getUser() != null){
             throw new TaskStatusIsNotValidForAction("Task : " + task.getId() + " : " + task.getTitle() + " not available / cannot be assigned");
         }
     }

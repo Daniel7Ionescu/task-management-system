@@ -2,9 +2,7 @@ package com.teamrocket.tms.services.user;
 
 import com.teamrocket.tms.exceptions.project.ProjectNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserDoesNotHaveATeamException;
-import com.teamrocket.tms.exceptions.user.UserNotFoundException;
 import com.teamrocket.tms.exceptions.user.UserUnauthorizedActionException;
-import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.models.dtos.ProjectDTO;
 import com.teamrocket.tms.models.dtos.TaskDTO;
 import com.teamrocket.tms.models.dtos.TeamDTO;
@@ -170,11 +168,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<TaskDTO> getAllTasksForUser(Long userId){
+        userServiceValidation.getValidUser(userId, "getAllTasksForUser");
+        log.info("User with the id {} retrieved.",userId);
+
+        return taskService.getAllTasksForUser(userId);
+    }
+
+    @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
         User user = userServiceValidation.getValidUser(userId, "createProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
 
         return projectService.createProject(projectDTO);
+    }
+
+    @Override
+    public void deleteProject(Long userId, Long id) {
+        ProjectDTO projectDTO = projectService.getProjectById(id);
+        if (projectDTO == null) {
+            throw new ProjectNotFoundException("Project with the id " + id + "not found.");
+        }
+
+        User user = userServiceValidation.getValidUser(userId, "deleteProject");
+        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
+
+        projectService.deleteProject(id);
+        log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
 
     @Override
@@ -240,27 +260,5 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(targetUserEntity);
 
         return modelMapper.map(savedUser, UserDTO.class);
-    }
-
-    @Override
-    public List<TaskDTO> getAllTasksForUser(Long userId){
-        userServiceValidation.getValidUser(userId, "getAllTasksForUser");
-        log.info("User with the id {} retrieved.",userId);
-
-        return taskService.getAllTasksForUser(userId);
-    }
-
-    @Override
-    public void deleteProject(Long userId, Long id) {
-        ProjectDTO projectDTO = projectService.getProjectById(id);
-        if (projectDTO == null) {
-            throw new ProjectNotFoundException("Project with the id " + id + "not found.");
-        }
-
-        User user = userServiceValidation.getValidUser(userId, "deleteProject");
-        userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
-
-        projectService.deleteProject(id);
-        log.info("Project with id {} deleted by user with id {}.", id, userId);
     }
 }
