@@ -10,4 +10,6 @@ public interface TaskServiceValidation {
     void validateTaskCanBeAssigned(Task task);
 
     void validateUserCanCompleteTaskObjectives(Long userId, Long userIdFromTask);
+
+    Task getValidTask(Long taskId, String methodName);
 }
