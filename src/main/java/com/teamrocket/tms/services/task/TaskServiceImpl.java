@@ -10,11 +10,14 @@ import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
 import com.teamrocket.tms.repositories.TaskRepository;
 import com.teamrocket.tms.utils.enums.Status;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -168,6 +171,19 @@ public class TaskServiceImpl implements TaskService {
         return modelMapper.map(savedTask, TaskDTO.class);
     }
 
+    @Transactional
+    @Override
+    public TaskDTO addCommentToTask(String userName, Long taskId, String comment) {
+        Task task = taskServiceValidation.getValidTask(taskId, "addCommentToTask");
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
+        task.getComments().put(localDateTime.format(dateTimeFormatter), userName + " : " + comment);
+        Task savedTask = taskRepository.save(task);
+
+        return modelMapper.map(savedTask, TaskDTO.class);
+    }
+
     @Override
     public void validateTaskCanBeAssigned(Task task) {
         taskServiceValidation.validateTaskCanBeAssigned(task);
@@ -175,9 +191,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDTO assignUserToTask(User userEntity, Long taskId) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException("Task with id " + taskId + " not found."));
-        log.info("Task with the id {} retrieved.", taskId);
+        Task task = taskServiceValidation.getValidTask(taskId, "assignUserToTask");
 
         taskServiceValidation.validateTaskCanBeAssigned(task);
 

@@ -28,4 +28,6 @@ public interface TaskService {
     void validateTaskCanBeAssigned(Task task);
 
     TaskDTO userReviewTask(String reviewerName, Long taskId, TaskDTO taskDTO);
+
+    TaskDTO addCommentToTask(String userName, Long taskId, String comment);
 }

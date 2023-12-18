@@ -34,6 +34,8 @@ public interface UserService {
 
     List<TaskDTO> getAllTasksForUser(Long userId);
 
+    TaskDTO addCommentToTask(Long userId, Long taskId, String comment);
+
     ProjectDTO createProject(Long userId, ProjectDTO projectDTO);
 
     void deleteProject(Long userId, Long id);

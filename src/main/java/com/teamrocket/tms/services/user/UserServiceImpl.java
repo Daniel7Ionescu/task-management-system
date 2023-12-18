@@ -176,6 +176,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TaskDTO addCommentToTask(Long userId, Long taskId, String comment) {
+        User user = userServiceValidation.getValidUser(userId, "addCommentToTask");
+        String userName = user.getFirstName() + " " + user.getLastName();
+
+        return taskService.addCommentToTask(userName, taskId, comment);
+    }
+
+    @Override
     public ProjectDTO createProject(Long userId, ProjectDTO projectDTO) {
         User user = userServiceValidation.getValidUser(userId, "createProject");
         userServiceValidation.validateUserRoleCanPerformAction(user, Role.PROJECT_MANAGER);
