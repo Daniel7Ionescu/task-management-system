@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long>, CustomTaskRepository, JpaSpecificationExecutor<Task> {
+public interface TaskRepository extends JpaRepository<Task, Long>, CustomTaskRepository{
 
     Task findByTitle(String title);
 
