@@ -70,6 +70,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> getFilteredTasks(TaskFilterDTO parameters, Project project) {
+        if (isFilterTaskDTONull(parameters))
+        {
+            return taskRepository.findAll().stream()
+                    .map(element -> modelMapper.map(element, TaskDTO.class))
+                    .toList();
+        }
+
         return taskRepository.findFilteredTasks(parameters.getId(), parameters.getDueDate(), parameters.getPriority()).stream()
                 .filter(element -> Integer.valueOf(element.getObjectives().size()).equals(parameters.getObjectives()))
                 .map(element -> modelMapper.map(element, TaskDTO.class))
@@ -177,5 +184,9 @@ public class TaskServiceImpl implements TaskService {
             default:
                 return Status.IN_PROGRESS;
         }
+    }
+
+    private boolean isFilterTaskDTONull(TaskFilterDTO parameters) {
+        return parameters.getId() == null && parameters.getObjectives() == null && parameters.getDueDate() == null && parameters.getPriority() == null;
     }
 }
