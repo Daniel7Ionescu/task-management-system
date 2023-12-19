@@ -1,13 +1,13 @@
 package com.teamrocket.tms.services.task;
 
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.dtos.TaskFilterDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.models.entities.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TaskService {
 
@@ -15,7 +15,7 @@ public interface TaskService {
 
     List<TaskDTO> getAllTasks();
 
-    List<TaskDTO> getFilteredTasks(Map<String, String> parameters, Project project);
+    List<TaskDTO> getFilteredTasks(TaskFilterDTO parameters, Project project);
 
     TaskDTO getTaskById(Long id);
 

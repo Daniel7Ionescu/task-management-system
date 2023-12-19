@@ -1,12 +1,8 @@
 package com.teamrocket.tms.services.user;
 
-import com.teamrocket.tms.models.dtos.TaskDTO;
-import com.teamrocket.tms.models.dtos.ProjectDTO;
-import com.teamrocket.tms.models.dtos.TeamDTO;
-import com.teamrocket.tms.models.dtos.UserDTO;
+import com.teamrocket.tms.models.dtos.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
 
@@ -30,7 +26,7 @@ public interface UserService {
 
     TaskDTO reviewTask(Long userId, Long taskId, TaskDTO taskDTO);
 
-    List<TaskDTO> getFilteredTasks(Long userId, Map<String, String> parameters);
+    List<TaskDTO> getFilteredTasks(Long userId, TaskFilterDTO parameters);
 
     List<TaskDTO> getAllTasksForUser(Long userId);
 
