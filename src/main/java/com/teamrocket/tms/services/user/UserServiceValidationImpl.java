@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+/**
+ * Contributors: ...
+ */
 @Slf4j
 @Component
 public class UserServiceValidationImpl implements UserServiceValidation {
