@@ -4,6 +4,7 @@ import com.teamrocket.tms.exceptions.task.TaskNotFoundException;
 import com.teamrocket.tms.exceptions.task.TaskStatusIsNotValidForAction;
 import com.teamrocket.tms.exceptions.user.UsersAreEqualsException;
 import com.teamrocket.tms.models.dtos.TaskDTO;
+import com.teamrocket.tms.models.dtos.TaskFilterDTO;
 import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.dtos.UserDTO;
 import com.teamrocket.tms.models.entities.Task;
@@ -16,12 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.teamrocket.tms.utils.calculators.CompletionCalculator.*;
 
@@ -70,44 +69,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> getFilteredTasks(Map<String, String> parameters, Project project) {
-        List<List<TaskDTO>> resultList = new ArrayList<>();
-
-        for (String key : parameters.keySet()) {
-            if (key.equals("userId")) {
-                resultList.add(taskRepository.findByUserId(Long.valueOf(parameters.get(key))).stream()
-                        .filter(element -> element.getProject().equals(project))
-                        .map(element -> modelMapper.map(element, TaskDTO.class))
-                        .toList());
-            }
-            if (key.equals("objectives")) {
-                resultList.add(taskRepository.findByProject(project).stream()
-                        .filter(element -> element.getProject().equals(project))
-                        .filter(element -> element.getObjectives().size() == Integer.parseInt(parameters.get(key)))
-                        .map(element -> modelMapper.map(element, TaskDTO.class))
-                        .toList());
-            }
-            if (key.equals("dueDate")) {
-                resultList.add(taskRepository.findByDueDate(LocalDate.parse(parameters.get(key))).stream()
-                        .filter(element -> element.getProject().equals(project))
-                        .map(element -> modelMapper.map(element, TaskDTO.class))
-                        .toList());
-            }
-            if (key.equals("priority")) {
-                resultList.add(taskRepository.findByProject(project).stream()
-                        .filter(element -> element.getPriority() != null)
-                        .filter(element -> element.getPriority().getPriorityLabel().equals(parameters.get(key)))
-                        .map(element -> modelMapper.map(element, TaskDTO.class))
-                        .toList());
-            }
+    public List<TaskDTO> getFilteredTasks(TaskFilterDTO parameters, Project project) {
+        if (isFilterTaskDTONull(parameters))
+        {
+            return taskRepository.findAll().stream()
+                    .map(element -> modelMapper.map(element, TaskDTO.class))
+                    .toList();
         }
 
-        List<TaskDTO> result = new ArrayList<>(resultList.get(0));
-        for (List<TaskDTO> list : resultList) {
-            result.retainAll(list);
-        }
-
-        return result;
+        return taskRepository.findFilteredTasks(parameters.getId(), parameters.getDueDate(), parameters.getPriority()).stream()
+                .filter(element -> Integer.valueOf(element.getObjectives().size()).equals(parameters.getObjectives()))
+                .map(element -> modelMapper.map(element, TaskDTO.class))
+                .toList();
     }
 
     @Override
@@ -211,5 +184,9 @@ public class TaskServiceImpl implements TaskService {
             default:
                 return Status.IN_PROGRESS;
         }
+    }
+
+    private boolean isFilterTaskDTONull(TaskFilterDTO parameters) {
+        return parameters.getId() == null && parameters.getObjectives() == null && parameters.getDueDate() == null && parameters.getPriority() == null;
     }
 }

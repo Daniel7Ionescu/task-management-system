@@ -1,16 +1,12 @@
 package com.teamrocket.tms.controllers;
 
-import com.teamrocket.tms.models.dtos.TaskDTO;
-import com.teamrocket.tms.models.dtos.ProjectDTO;
-import com.teamrocket.tms.models.dtos.TeamDTO;
-import com.teamrocket.tms.models.dtos.UserDTO;
+import com.teamrocket.tms.models.dtos.*;
 import com.teamrocket.tms.services.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -67,8 +63,8 @@ public class UserController {
         return ResponseEntity.ok(userService.userCompleteTaskObjectives(userId, taskId, taskDTO));
     }
 
-    @GetMapping("/{userId}/tasks/filtered")
-    public ResponseEntity<List<TaskDTO>> getFilteredTasks(@PathVariable Long userId, @RequestParam Map<String, String> parameters) {
+    @PutMapping("/{userId}/tasks/filtered")
+    public ResponseEntity<List<TaskDTO>> getFilteredTasks(@PathVariable Long userId, @RequestBody TaskFilterDTO parameters) {
         return ResponseEntity.ok(userService.getFilteredTasks(userId, parameters));
     }
 
