@@ -4,7 +4,6 @@ import com.teamrocket.tms.models.entities.Project;
 import com.teamrocket.tms.models.entities.Task;
 import com.teamrocket.tms.utils.enums.Priority;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
